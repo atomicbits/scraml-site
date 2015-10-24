@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Agency - Start Bootstrap Theme</title>
+    <title>Scraml - Scalable clients from RAML</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -46,7 +46,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand page-scroll" href="#page-top">Start Bootstrap</a>
+                <a class="navbar-brand page-scroll" href="#page-top">Scraml</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -56,16 +56,19 @@
                         <a href="#page-top"></a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#services">Services</a>
+                        <a class="page-scroll" href="#services">Features</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#portfolio">Portfolio</a>
+                        <a class="page-scroll" href="#portfolio">Applications</a>
+                    </li>
+                    <!--<li>-->
+                        <!--<a class="page-scroll" href="#testing">API Testing</a>-->
+                    <!--</li>-->
+                    <li>
+                        <a class="page-scroll" href="#">Documentation</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#about">About</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#team">Team</a>
+                        <a class="page-scroll" href="#pricing">Pricing</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#contact">Contact</a>
@@ -81,8 +84,8 @@
     <header>
         <div class="container">
             <div class="intro-text">
-                <div class="intro-lead-in">Welcome To Our Studio!</div>
-                <div class="intro-heading">It's Nice To Meet You</div>
+                <div class="intro-lead-in">Scraml - the scalable client generator for RAML</div>
+                <div class="intro-heading">Turn your RAML model into a typesafe DSL</div>
                 <a href="#services" class="page-scroll btn btn-xl">Tell Me More</a>
             </div>
         </div>
@@ -93,25 +96,33 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2 class="section-heading">Services</h2>
-                    <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+                    <h2 class="section-heading">Features</h2>
+                    <h3 class="section-subheading text-muted">Scraml provides your Java and Scala projects with a fully typed Domain Specific Language (DSL) to access your REST APIs based on your <a href="http://raml.org/">RAML model</a>. Java POJOs and Scala case classes are generated from the JSON-schema representation of the Data Transfer Objects in these models. This type information is embedded in the DSL to create a fluent language that enforces your RAML model.</h3>
                 </div>
             </div>
             <div class="row text-center">
                 <div class="col-md-4">
-                    <span class="fa-stack fa-4x">
-                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                        <i class="fa fa-shopping-cart fa-stack-1x fa-inverse"></i>
-                    </span>
-                    <h4 class="service-heading">E-Commerce</h4>
-                    <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
+                    <img src="img/raml-example.png" class="img-responsive" alt="" style="max-height: 1000px; max-width: 360px; display: block; margin-left: auto; margin-right: auto; ">
+                    <h4 class="service-heading">RAML input</h4>
+                    <p class="text-muted">Write your <a href="http://raml.org/">RAML model</a> and describe your DTO's using JSON-schema</p>
+                </div>
+                <div class="col-md-4">
+                    <!--float: left; position: absolute; z-index: 3000; top: 23px; left: 33px; -->
+                    <img src="img/java-example.png" class="img-responsive" alt="" style="max-height: 160px; max-width: 360px; display: block; margin-left: auto; margin-right: auto; ">
+                    <h4 class="service-heading">Java generator</h4>
+                    <p class="text-muted" style="margin-bottom: 140px;">The Java generator produces a fully typesafe and asynchronous DSL that incorporates POJOs representing your DTOs. A <a href="https://github.com/atomicbits/scraml-maven-plugin">maven plugin</a> is available to make scraml integration in your Java+maven projects a no-brainer. Activate and configure the maven plugin, put your RAML model in your project's resource folder and compile.</p>
+                </div>
+                <div class="col-md-4">
+                    <img src="img/scala-example.png" class="img-responsive" alt="" style="max-height: 160px; max-width: 360px; display: block; margin-left: auto; margin-right: auto; margin-bottom: 35px; ">
+                    <h4 class="service-heading">Scala generator</h4>
+                    <p class="text-muted" style="margin-bottom: 140px;" >The Scala generator produces a fully typesafe and asynchronous DSL that incorporates case classes representing your DTOs. An <a href="https://github.com/atomicbits/scraml-sbt-plugin">sbt plugin</a> is available to make scraml integration in your Scala+sbt projects a walk in the park. Activate and configure the sbt plugin, put your RAML model in your project's resource folder and compile</p>
                 </div>
                 <div class="col-md-4">
                     <span class="fa-stack fa-4x">
                         <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                        <i class="fa fa-laptop fa-stack-1x fa-inverse"></i>
+                        <i class="fa fa-lock fa-stack-1x fa-inverse"></i>
                     </span>
-                    <h4 class="service-heading">Responsive Design</h4>
+                    <h4 class="service-heading">Support for class hierarchies</h4>
                     <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
                 </div>
                 <div class="col-md-4">
@@ -119,19 +130,20 @@
                         <i class="fa fa-circle fa-stack-2x text-primary"></i>
                         <i class="fa fa-lock fa-stack-1x fa-inverse"></i>
                     </span>
-                    <h4 class="service-heading">Web Security</h4>
+                    <h4 class="service-heading">Support for generic classes</h4>
                     <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima maxime quam architecto quo inventore harum ex magni, dicta impedit.</p>
                 </div>
+
             </div>
         </div>
     </section>
 
-    <!-- Portfolio Grid Section -->
+    <!-- Features Grid Section -->
     <section id="portfolio" class="bg-light-gray">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2 class="section-heading">Portfolio</h2>
+                    <h2 class="section-heading">Applications</h2>
                     <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
                 </div>
             </div>
@@ -224,12 +236,12 @@
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about">
+    <!-- testing Section -->
+    <section id="testing">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2 class="section-heading">About</h2>
+                    <h2 class="section-heading">Testing your REST API</h2>
                     <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
                 </div>
             </div>
@@ -306,7 +318,7 @@
     </section>
 
     <!-- Team Section -->
-    <section id="team" class="bg-light-gray">
+    <section id="pricing" class="bg-light-gray">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
@@ -403,7 +415,7 @@
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <h2 class="section-heading">Contact Us</h2>
-                    <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+                    <h3 class="section-subheading text-muted">Got a question? We are happy to help you out!</h3>
                 </div>
             </div>
             <div class="row">
@@ -446,24 +458,25 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <span class="copyright">Copyright &copy; Your Website 2014</span>
+                    <span class="copyright">Copyright &copy; Atomic BITS bvba 2015</span>
                 </div>
                 <div class="col-md-4">
                     <ul class="list-inline social-buttons">
-                        <li><a href="#"><i class="fa fa-twitter"></i></a>
+                        <li><a href="https://twitter.com/atomic_bits"><i class="fa fa-twitter"></i></a>
                         </li>
-                        <li><a href="#"><i class="fa fa-facebook"></i></a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                        </li>
+                        <!--<li><a href="#"><i class="fa fa-facebook"></i></a>-->
+                        <!--</li>-->
+                        <!--<li><a href="#"><i class="fa fa-linkedin"></i></a>-->
+                        <!--</li>-->
                     </ul>
                 </div>
                 <div class="col-md-4">
                     <ul class="list-inline quicklinks">
-                        <li><a href="#">Privacy Policy</a>
-                        </li>
-                        <li><a href="#">Terms of Use</a>
-                        </li>
+                        <li>Scraml&trade;</li>
+                        <!--<li><a href="#">Privacy Policy</a>-->
+                        <!--</li>-->
+                        <!--<li><a href="#">Terms of Use</a>-->
+                        <!--</li>-->
                     </ul>
                 </div>
             </div>
