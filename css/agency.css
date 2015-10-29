@@ -201,6 +201,7 @@ h1,h2,h3,h4,h5,h6
 header
 {
 	background-attachment: scroll;
+    /* Copyleft image from: http://www.sgeier.net/fractals/index05.php */
 	background-image: url(../img/header-bg-1.jpg);
 	background-color: #122b40;
 	background-position: center center;
