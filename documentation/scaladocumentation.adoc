@@ -5,6 +5,9 @@
 :pygments-style: friendly
 
 
+We are currently on RAML version 0.8 and we highly focus on json-schema models to represent data transfer objects. We are upgrading to
+RAML version 1.0 and its own data representation format as soon as we can. 
+
 == Quickstart Scala
 
 Will be added as soon as the first release of [scramlfont]#Scraml# is there (expected by the end of november 2015).
