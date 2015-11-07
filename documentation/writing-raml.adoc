@@ -50,7 +50,7 @@ json-schema version that you use. According to the specs, it is a required keywo
 [scramlfont]#Scraml# won't use it for any specific purpose. The `id` field in a json-schema on the other hand is *essential for
 cross-referencing* between json-schemas! Therefore, [scramlfont]#Scraml# requires you to specify one on each json-schema file! The
 format should be of the form `http://atomicbits.io/api/user.json` and may end with a `#`. If the schema refers to an object,
-the canonical name of the object will be deduced from its `id`. In this case `io.atomicbits.api.User` will be the canonical object name
+the canonical name of the object will be deduced from its `id`. In this case `io.atomicbits.api.User` will be the canonical class name
 that will recur in the generated Scala case class representation of a user.
 
 IMPORTANT: It is essential for cross-referencing objects that each json-schema has a unique `id` field! [scramlfont]#Scraml# requires it.

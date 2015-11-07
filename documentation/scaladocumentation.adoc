@@ -141,7 +141,7 @@ Now, let's see how the generated case classes look like.
 === Generated case classes
 
 The <<scala-user>> reflects the fields described by the corresponding json-schema. Notice that the types of the fields that were not
-required (such as homePage) are wrapped in the `Option` monad. The address object has a strange canonical name that is a result of the
+required (such as homePage) are wrapped in the `Option` monad. The address class has a strange canonical name that is a result of the
 somewhat unconventional `id` that we gave in the nested json-schema example. All optional fields have a default value of `None`, which
 shortens the construction of those case classes when the values of those fields are empty. The <<scala-link>> is referred to by the User
 object (the `homePage` field). Because both classes are in the same package, the import statement to the Link class in User is omitted.
@@ -258,7 +258,7 @@ object Method {
 
 ----
 
-=== Scraml typesafe asynchronous DSL
+=== Scraml typesafe asynchronous DSL: the basics
 
 Now that we have a feeling of how the DTOs look like, we can start to explain how [scramlfont]#Scraml# turns the RAML resource definitions
 into a typesafe DSL. Below, a <<raml-userservice>> is modeled in RAML using the json-schema definition of `user.json`, `link.json` and
@@ -319,16 +319,85 @@ schemas:
                   "$ref": "user.json"
                 }
               }
+----
+
+Compiling the codebase using sbt, [scramlfont]#Scraml# will generate the DSL in the code generation step before actual compilation. This
+results in a client that provides access to the resources we described above. Let's assume the above RAML file sits in the folder
+`io/atomicbits/api/` under the resources folder and the filename is `user-api.raml`. The resulting DSL can be used to do the following.
 
 
-/rest/user/upload:
-  post:
-    body:
-      multipart/form-data:
-    responses:
-      200:
-        body:
+[[scala-client]]
+[source,scala]
+.client DSL code
+----
+  import io.atomicbits.api.UserApi
+  ...
+  val client = new UserApi( <1>
+    host = "localhost",
+    port = 8281,
+    protocol = "http",
+    defaultHeaders = Map(),
+    prefix = None,
+    config = ClientConfig()
+  )
 
+  val userResource = client.rest.user <2>
+
+  val eventualUsersResponse: Future[Response[List[User]]] = <5>
+    userResource
+      .get( <3>
+        age = Some(51),
+        firstName = Some("John"),
+        lastName = None,
+        organization = List("ESA", "NASA") <4>
+      )
+
+  val usersResponse: Response[List[User]] = Await.result(eventualUsersResponse, 2 seconds)
+  val users: List[User] = usersResponse.body
+----
+<1> Client initialization takes several basic parameters directly and many more advanced options through the ClientConfig parameter.
+<2> Resources that you build with the DSL are immutable constructs with pure value semantics, so you can assign them to variables and reuse them many times, they will always have the same meaning.
+<3> `get(...)` executes the GET request on the resource, consuming several fully typed query parameters.
+<4> Remember the `repeat: true` statement in the json-schema of this resource? The DSL will provide a list to represent the repeated parameter.
+<5> The result is asynchronous (hence the `Future[]`) and it is wrapped inside a `Result[T]` object. The body is a `List[User]`, matching the array of user type that is defined in the schema for this resource. `Result[T]` also contains the response headers and status code.
+
+The `UserApi` class is the starting point for establishing client requests using the DSL. It takes various basic parameters that are used
+to establish a connection with a remote service. In addition to the basic parameters, many more detailed parameters can be passed by
+configuring a `ClientConfig` object. It takes parameters such as `requestTimeout`, `maxRequestRetry`, `connectTimeout`,
+`connectionTTL`, `maxConnections`, `maxConnectionsPerHost`, `allowPoolingConnections` and several more. These parameters are passed to
+the underlying ning client that handles the actual requests. The rest path is constructed in the DSL by following the corresponding
+field paths on the DSL entries: `client.rest.user` corresponds to the resource on `http:\\localhost:8281\rest\user`. The `.get(...)`
+action executes the actual request with some additional query parameters that are passed to the `.get()` method. The query parameters in
+the RAML example above weren't required parameters (default is false). That's why we need to wrap the parameters as an `Option[T]` here.
+The `organization` query parameter has the `repeat: true` setting, which results in a `List[String]` parameter on the GET action.
+
+[[scala-request-get]]
+.GET request with query parameters
+----
+GET
+http://localhost:8281/rest/user?age=51.0&firstName=John&organization=ESA&organization=NASA
+headers:	Accept=application/json
+----
+
+[[scala-response-get]]
+.GET response
+----
+headers:  "Transfer-Encoding=chunked"; "Server=Jetty(6.1.26)"
+body:     [{"address": {"streetAddress": "Mulholland Drive", "city": "LA", "state": "California"}, "firstName":"John", "lastName": "Doe", "age": 21, "id": "1"}]
+status:   200 "OK"
+----
+
+In <<scala-request-get>>, we see what the actual request looks like that goes out. Mind the double organization query parameter to match
+the repeated character for this parameter. Also notice that [scramlfont]#Scraml# automatically adds the accept header that was specified
+in the RAML model for this GET action. The same goes for the `Content-Type` header when a request body is present. The result of
+the <<scala-response-get>> shows that the result is a `200 "OK"` response whose body contains a list of user object in JSON format.
+
+Let's add some <<raml-userservice-more>> and see how [scramlfont]#Scraml# handles it.
+
+[[raml-userservice-more]]
+[source,yaml]
+.more actions in the user service
+----
 /rest/user/{userid}:
   uriParameters:
     userid:
@@ -361,32 +430,161 @@ schemas:
           application/json:
             schema: link
 
+/rest/user/upload:
+  post:
+    body:
+      multipart/form-data:
+    responses:
+      200:
+        body:
 ----
 
-Compiling the codebase using sbt, [scramlfont]#Scraml# will generate the DSL in the code generation step before actual compilation. This
-results in a client that provides access to the resources we described above. Let's assume the above RAML file sits in the folder
-`io/atomicbits/api/` under the resources folder and the filename is `user-api.raml`. The resulting DSL can be used to do the following.
+The resource `/rest/user/{userid}` takes a path parameter that must be a string and as three actions defined on it: POST, DELETE
+and PUT. The POST action represents a form post that contains a string parameter `text` and an integer parameter `value`. The result
+type is not specified. The DELETE action has no specific configuration at all, and the PUT action sends a user object as JSON in the
+request and expects a link object as JSON in its response. Finally, there is also a `/rest/user/upload` resource on which a
+multipart form upload is defined. After running [scramlfont]#Scraml# in the source-generation step of sbt, we get a DSL that enables
+<<scala-client-more>>.
 
 
-[[scala-client]]
+[[scala-client-more]]
 [source,scala]
-.client DSL code
+.more client DSL functionality
 ----
-  import io.atomicbits.api.UserApi
-  ...
-  val client = new UserApi(
-    host = "somehost",
-    port = 80,
-    protocol = "http",
-    defaultHeaders = Map("Accept" -> "application/json"),
-    prefix = None,
-    config = ClientConfig()
+  val userFoobarResource = client.rest.user.userid("foobar") <1>
+
+
+  // POST
+  val eventualPostResponse: Future[Response[String]] =
+    userFoobarResource
+      .post(text = "Hello Foobar", value = None) <2>
+
+  val postResponse: Response[String] = Await.result(eventualPostResponse, 2 seconds)  <3>
+
+  assertResult(200)(postResponse.status) <4>
+  assertResult("Some server response")(postResponse.body) <5>
+
+
+  // DELETE
+  val eventualDeleteResponse: Future[Response[String]] = userFoobarResource.delete()
+  val deleteResponse = Await.result(eventualDeleteResponse, 2 seconds)
+  assertResult(200)(deleteResponse.status)
+
+
+  // PUT
+  val user = User(
+    homePage = Some(Link("http://foo.bar", Method.GET, None)),
+    address = Some(UserDefinitionsAddress("Mulholland Drive", "LA", "California")),
+    age = 21,
+    firstName = "John",
+    lastName = "Doe",
+    id = "1"
   )
 
-  val userResource = client.rest.user
-  val userFoobarResource = userResource.userid("foobar")
+  val eventualPutResponse: Future[Response[Link]] = userFoobarResource.put(user)
+  val putResponse = Await.result(eventualPutResponse, 2 seconds)
+  assertResult(Link("http://foo.bar", Method.GET, None))(putResponse.body)
 
-  val eventualUserResponse: Future[List[User]] =
+
+  // multipart form POST
+  val multipartFormPostResponse: Future[Response[String]] =
+    client.rest.user.upload.post(List(StringPart(name = "test", value = "string part value"))) <6>
+----
+<1> We construct the resource we need using the DSL, filling in the path parameter `userid` as a string value.
+<2> We call the POST action on this resource sending the form fields `text` and `value` with it.
+<3> We wait for the future to finish (you should only do this in test code, obviously).
+<4> We check that the response status code is 200.
+<5> The response body should be the text sent back from the service.
+<6> Multipart form POST requests take a list of either StringPart, FilePart or ByteArrayPart objects.
+
+
+=== Adding custom headers
+
+[scramlfont]#Scraml# allows you to add one or more headers on each resource in the DSL. The following example illustrates how to
+<<scala-custom-headers>> before calling a PUT action.
+
+[[scala-custom-headers]]
+[source,scala]
+.add custom headers
+----
+val listBodyResponse =
+  client.rest.user.activate
+    .addHeaders("Cookie" -> "user=roger", "Cookie" -> "key=regor")
+    .put(List(user))
+----
+
+
+If you want to have a certain header on all calls under a certain parent resource, then you can add it on that parent resource and build
+on from there, see how to <<scala-custom-header-reuse>>. Everywhere you reuse `resResource`, you'll get the cookie header that was set on
+it.
+
+
+[[scala-custom-header-reuse]]
+[source,scala]
+.add a custom header on all subresources
+----
+val restResource = client.rest.addHeaders("Cookie" -> "user=roger")
+
+val listBodyResponse = resResource.user.activate.put(List(user))
+----
+
+
+=== Handling multiple request content types and response accept types
+
+Imagine that you encode a version number in your content type and accept headers and that you can send several different types of content
+to your service, depending on the content type that you have. The next example shows the use of <<raml-userservice-double-content>> in RAML.
+
+
+[[raml-userservice-double-content]]
+[source,yaml]
+.double content types
+----
+/rest/user/:
+  put:
+    body:
+      application/vnd-v1.0+json:
+        schema: user
+      application/vnd-v0.1+json:
+        schema: user-old
+    responses:
+      200:
+        body:
+          application/vnd-v1.0+json:
+            schema: link
+----
+
+
+In this case, [scramlfont]#Scraml# forces you to choose which type you want to send before calling the `PUT` action. The following
+code sample shows how you <<scala-userservice-double-content>>.
+
+
+[[scala-userservice-double-content]]
+[source,scala]
+.choose a content type before executing the action
+----
+val eventualResponse: Future[Response[Link]] =
+  client.rest.user
+    .contentApplicationVndV10Json
+    .put(user)
+----
+
+By chosing the `contentApplicationVndV10Json` header selection, you get access to a `.put(user)` action that takes a user of the type that
+matches the `application/vnd-v1.0+json` content type.
+
+=== The asType, asJson and asString mappers
+The response of a request has the form `Future[Response[T]]`, where `T` is the type of the response body. The `Response` object also
+contains status information and the headers that were sent back with the server response. We are often only interested in the response
+body. That's where the `asType` mapper can help you to map `Response[T]` to its body `T`. It is, however, extremely important to
+realize that when using `asType` all responses without a body (204 responses), 300-responses and all failure codes (status > 400)
+are mapped to a failed future! So, `asType` really assumes that the user expects a 200-response as the only successful Future.
+
+IMPORTANT: When `asType` is invoked, all non-200 responses will be mapped to a *failed Future*!
+
+[[scala-asType]]
+[source,scala]
+.asType mapper
+----
+  val eventualUsersResponse: Future[List[User]] =
     userResource
       .get(
         age = Some(51),
@@ -394,9 +592,231 @@ results in a client that provides access to the resources we described above. Le
         lastName = None,
         organization = List("ESA", "NASA")
       )
-      .asType
+      .asType  // <1>
 
-  val userResponse: List[User] = Await.result(eventualUserResponse, 2 seconds)
+  val users: List[User] = Await.result(eventualUsersResponse, 2 seconds)
+----
+<1> The `asType` keyword maps the response to its body on a successful response (status == 200), all other statuses (status != 200) will
+give a *failed Future* once `asType` is invoked!
+
+When a response doesn't have a typed body, we can call `.asString` to get the body as a string. Or when we know it should contain
+arbitrary JSON, we can call `.asJson` to get the JSON body.
+
+
+
+=== Generic typing in json-schema
+
+Officially, there is no generic typing possible in json-schema because json-schema is not aan object-oriented modelling language. It
+is a language that was build to specify the rules to which JSON data has to adhere. In reality, however, data that is exchanged between
+services is usually modelled as object-oriented data constructs. Therefore, we really want to have the same sort of flexibility to
+model JSON data in an object-oriented fashion.
+
+Generic typing is added as a json-schema extension that [scramlfont]#Scraml# knows how to process. The illustration below shows a
+<<raml-generic-typing>>. It is a representation for a paged list that has two type variables `T` and `U` referring to the type of the
+elements in the paged list and the optional owner of the list respectively. The `typeVariables` field is added to the object's
+specification and represents the type symbols as an array of strings. The type symbols are repeated further down the object model's
+properties where they apply. They must be specified on an object type that takes no configuration other than the `genericType`
+field that refers to the type symbol.
+
+[[raml-generic-typing]]
+[source,json]
+.json-shema extension that enables modelling generic types
+----
+{
+  "id": "http://atomicbits.io/schema/paged-list.json#",
+  "type": "object",
+  "typeVariables": ["T", "U"],
+  "description": "A paged list with an optional owner of the list",
+  "properties": {
+    "count": {
+      "type": "integer",
+      "required": true
+    },
+    "elements": {
+      "required": true,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "genericType": "T"
+      }
+    },
+    "owner": {
+      "required": false,
+      "type": "object",
+      "genericType": "U"
+    }
+  }
+}
 ----
 
-The `UserApi`
+During the code generation step, [scramlfont]#Scraml# creates a fully typed generic object that carries the two type references, see the
+<<scala-generic-typing>> example below.
+
+[[scala-generic-typing]]
+[source,scala]
+.generic typed object
+----
+package io.atomicbits.schema
+
+import play.api.libs.json._
+
+case class PagedList[T, U](count: Long, elements: List[T], owner: Option[U] = None)
+
+object PagedList {
+
+  import play.api.libs.functional.syntax._
+
+  implicit def jsonFormatter[T: Format, U: Format]: Format[PagedList[T, U]] =
+    ((__ \ "count").format[Long] ~
+      (__ \ "elements").format[List[T]] ~
+      (__ \ "owner").formatNullable[U])(PagedList.apply, unlift(PagedList.unapply))
+
+}
+----
+
+Because of the type parameters, the Play formats for this case class have to be generated in a different way, which [scramlfont]#Scraml#
+delivers automatically.
+
+
+=== Type hierarchies in json-schema
+
+As said in the previous section, json-schema was never meant to be an object-oriented modeling language. And although there is a way
+to express someting that may be interpreted as a type hierarchy that [scramlfont]#Scraml# understands, it is in a specific way our own
+interpretation of the model.
+
+In json-schema, there is the `oneOf` keyword that lets you choose between several versions of a schema to use in a larger schema. If we
+apply this on an object type and let you choose between sets of properties that you can have on that object, we have a way to express
+type hierarchies as they appear in object-oriented models. The following sample illustrates a <<raml-type-hierarchy>>.
+
+
+[[raml-type-hierarchy]]
+[source,json]
+.json-schema modelling a type hierarchy using the oneOf operator
+----
+{
+  "id": "http://atomicbits.io/schema/animal.json#",
+  "type": "object",
+  "typeDiscriminator": "_type",
+  "description": "An animal object.",
+  "properties": {
+    "gender": {
+      "required": true,
+      "type": "string"
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "_type": {
+          "enum": [
+            "Cat"
+          ]
+        },
+        "name": {
+          "required": false,
+          "type": "string"
+        }
+      }
+    },
+    {
+      "id": "http://atomicbits.io/schema/dog.json#",
+      "type": "object",
+      "properties": {
+        "_type": {
+          "enum": [
+            "Dog"
+          ]
+        },
+        "name": {
+          "required": false,
+          "type": "string"
+        },
+        "canBark": {
+          "required": true,
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "properties": {
+        "_type": {
+          "enum": [
+            "Fish"
+          ]
+        }
+      }
+    }
+  ]
+}
+----
+
+The top-level class represents an animal with one field, the `gender`. The other fields are dependent on the specifics of the animal.
+In the case of a dog, there is a `name` field and a `canBark` field present. The convention here is that each subclass has a type field
+that points to an enumeration that contains only one element: the discriminator for the type. Since a json object has no class information
+attached to it by default, we need to inject a type discriminator field. The name of the field is `type` by default, but it can be changed
+by adding the `typeDiscriminator` string field at the top-level object.
+
+
+[[scala-class-hierarchy]]
+[source,scala]
+.generated case class hierarchy with common parent trait
+----
+package io.atomicbits.schema
+
+import play.api.libs.json._
+import io.atomicbits.scraml.dsl.json.TypedJson._
+
+sealed trait Animal {
+
+  def gender: String
+
+}
+
+object Animal {
+
+  implicit val jsonFormat: Format[Animal] =
+    TypeHintFormat(
+      "_type",
+      Cat.jsonFormatter.withTypeHint("Cat"),
+      Dog.jsonFormatter.withTypeHint("Dog"),
+      Fish.jsonFormatter.withTypeHint("Fish")
+    )
+
+}
+
+case class Cat(gender: String, name: Option[String] = None) extends Animal
+
+object Cat {
+
+  implicit val jsonFormatter: Format[Cat] = Json.format[Cat]
+
+}
+
+case class Dog(gender: String, canBark: Boolean, name: Option[String] = None) extends Animal
+
+object Dog {
+
+  implicit val jsonFormatter: Format[Dog] = Json.format[Dog]
+
+}
+
+case class Fish(gender: String) extends Animal
+
+object Fish {
+
+  implicit val jsonFormatter: Format[Fish] = Json.format[Fish]
+
+}
+----
+
+The above code sample shows the <<scala-class-hierarchy>>. The parent trait defines the common property `gender`, while the leaf classes
+harbor the specifics for each kind of animal. To handle the JSON formatting of this hierarchy in an elegant way, we introduce the helper
+class `TypedJson` to deal with the type field to discriminate between the kinds of animals during serialization and deserialization.
+Have a look at the test class `RamlModelGeneratorTest` in the GitHub project https://github.com/atomicbits/scraml-test-scala to see
+class hierarchy serialization and the other examples used in this documentation in action.
+
+
+
+
+
+
