@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.2">
-<title>Quickstart Scala</title>
+<title>Quickstart Java</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400">
 <link rel="stylesheet" href="./asciidoctor.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
@@ -16,7 +16,7 @@
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_quickstart_scala">Quickstart Scala</a></li>
+<li><a href="#_quickstart_java">Quickstart Java</a></li>
 <li><a href="#_raml_basics">RAML basics</a>
 <ul class="sectlevel2">
 <li><a href="#_resource_definitions_and_json_schema">Resource definitions and json-schema</a></li>
@@ -25,11 +25,10 @@
 <li><a href="#_invoking_scraml">Invoking Scraml</a>
 <ul class="sectlevel2">
 <li><a href="#_cross_referencing_json_schemas">Cross-referencing json-schemas</a></li>
-<li><a href="#_generated_case_classes">Generated case classes</a></li>
+<li><a href="#_generated_pojos">Generated POJOs</a></li>
 <li><a href="#_scraml_typesafe_asynchronous_dsl_the_basics">Scraml typesafe asynchronous DSL: the basics</a></li>
 <li><a href="#_adding_custom_headers">Adding custom headers</a></li>
 <li><a href="#_handling_multiple_request_content_types_and_response_accept_types">Handling multiple request content types and response accept types</a></li>
-<li><a href="#_the_astype_asjson_and_asstring_mappers">The asType, asJson and asString mappers</a></li>
 <li><a href="#_generic_typing_in_json_schema">Generic typing in json-schema</a></li>
 <li><a href="#_type_hierarchies_in_json_schema">Type hierarchies in json-schema</a></li>
 </ul>
@@ -43,7 +42,7 @@
 RAML version 1.0 and its own data representation format as soon as we can.</p>
 </div>
 <div class="sect1">
-<h2 id="_quickstart_scala">Quickstart Scala</h2>
+<h2 id="_quickstart_java">Quickstart Java</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Will be added as soon as the first release of <span class="scramlfont">Scraml</span> is there (expected by the end of november 2015).</p>
@@ -151,12 +150,12 @@ It is essential for cross-referencing objects that each json-schema has a unique
 <h2 id="_invoking_scraml">Invoking Scraml</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The effect of having written a RAML model becomes interesting when you start using <span class="scramlfont">Scraml</span> to generate Scala code that
+<p>The effect of having written a RAML model becomes interesting when you start using <span class="scramlfont">Scraml</span> to generate Java code that
 brings you a typesafe and asynchronous Domain Specific Language (DSL) that will enforce you in a fluent manner to follow your RAML specs.</p>
 </div>
 <div class="paragraph">
-<p>The sample code that we use here is based on the Scala test project for <span class="scramlfont">Scraml</span>:
-<a href="https://github.com/atomicbits/scraml-test-scala" class="bare">https://github.com/atomicbits/scraml-test-scala</a>. You can checkout the full codebase there and play with the RAML definition and the test
+<p>The sample code that we use here is based on the Java test project for <span class="scramlfont">Scraml</span>:
+<a href="https://github.com/atomicbits/scraml-test-java" class="bare">https://github.com/atomicbits/scraml-test-java</a>. You can checkout the full codebase there and play with the RAML definition and the test
 classes that showcase the DSL.</p>
 </div>
 <div class="paragraph">
@@ -271,120 +270,177 @@ interpreted by <span class="scramlfont">Scraml</span> (see further for the diffe
 </div>
 </div>
 <div class="sect2">
-<h3 id="_generated_case_classes">Generated case classes</h3>
+<h3 id="_generated_pojos">Generated POJOs</h3>
 <div class="paragraph">
-<p>The <a href="#scala-user">User case class</a> reflects the fields described by the corresponding json-schema. Notice that the types of the fields that were not
-required (such as homePage) are wrapped in the <code>Option</code> monad. The address class has a strange canonical name that is a result of the
-somewhat unconventional <code>id</code> that we gave in the nested json-schema example. All optional fields have a default value of <code>None</code>, which
-shortens the construction of those case classes when the values of those fields are empty. The <a href="#scala-link">Link case class</a> is referred to by the User
+<p>The <a href="#java-user">User POJO</a> reflects the fields described by the corresponding json-schema. The address class has a strange canonical name that is
+a result of the somewhat unconventional <code>id</code> that we gave in the nested json-schema example. The <a href="#java-link">Link POJO</a> is referred to by the User
 object (the <code>homePage</code> field). Because both classes are in the same package, the import statement to the Link class in User is omitted.</p>
 </div>
-<div id="scala-user" class="listingblock">
-<div class="title">User case class</div>
+<div id="java-user" class="listingblock">
+<div class="title">User POJO</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="scala"><span class="tok-k">package</span> <span class="tok-nn">io.atomicbits.schema</span>
+<pre class="pygments highlight"><code data-lang="java"><span class="tok-kn">package</span> <span class="tok-n">io</span><span class="tok-o">.</span><span class="tok-na">atomicbits</span><span class="tok-o">.</span><span class="tok-na">schema</span><span class="tok-o">;</span>
 
-<span class="tok-k">import</span> <span class="tok-nn">play.api.libs.json._</span>
+<span class="tok-kn">import</span> <span class="tok-nn">com.fasterxml.jackson.annotation.*</span><span class="tok-o">;</span>
 
-<span class="tok-k">case</span> <span class="tok-k">class</span> <span class="tok-nc">User</span><span class="tok-o">(</span><span class="tok-n">age</span><span class="tok-k">:</span> <span class="tok-kt">Long</span><span class="tok-o">,</span>
-                <span class="tok-n">lastName</span><span class="tok-k">:</span> <span class="tok-kt">String</span><span class="tok-o">,</span>
-                <span class="tok-n">firstName</span><span class="tok-k">:</span> <span class="tok-kt">String</span><span class="tok-o">,</span>
-                <span class="tok-n">id</span><span class="tok-k">:</span> <span class="tok-kt">String</span><span class="tok-o">,</span>
-                <span class="tok-n">homePage</span><span class="tok-k">:</span> <span class="tok-kt">Option</span><span class="tok-o">[</span><span class="tok-kt">Link</span><span class="tok-o">]</span> <span class="tok-k">=</span> <span class="tok-nc">None</span><span class="tok-o">,</span>
-                <span class="tok-n">address</span><span class="tok-k">:</span> <span class="tok-kt">Option</span><span class="tok-o">[</span><span class="tok-kt">UserDefinitionsAddress</span><span class="tok-o">]</span> <span class="tok-k">=</span> <span class="tok-nc">None</span><span class="tok-o">)</span>
+<span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">User</span> <span class="tok-o">{</span>
 
-<span class="tok-k">object</span> <span class="tok-nc">User</span> <span class="tok-o">{</span>
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;address&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">UserDefinitionsAddress</span> <span class="tok-n">address</span><span class="tok-o">;</span>
 
-  <span class="tok-k">implicit</span> <span class="tok-k">val</span> <span class="tok-n">jsonFormatter</span><span class="tok-k">:</span> <span class="tok-kt">Format</span><span class="tok-o">[</span><span class="tok-kt">User</span><span class="tok-o">]</span> <span class="tok-k">=</span> <span class="tok-nc">Json</span><span class="tok-o">.</span><span class="tok-n">format</span><span class="tok-o">[</span><span class="tok-kt">User</span><span class="tok-o">]</span>
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;age&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">Long</span> <span class="tok-n">age</span><span class="tok-o">;</span>
+
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;firstName&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">String</span> <span class="tok-n">firstName</span><span class="tok-o">;</span>
+
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;homePage&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">Link</span> <span class="tok-n">homePage</span><span class="tok-o">;</span>
+
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;id&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">String</span> <span class="tok-n">id</span><span class="tok-o">;</span>
+
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;lastName&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">String</span> <span class="tok-n">lastName</span><span class="tok-o">;</span>
+
+    <span class="tok-kd">public</span> <span class="tok-nf">User</span><span class="tok-o">()</span> <span class="tok-o">{}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-nf">User</span><span class="tok-o">(</span><span class="tok-n">UserDefinitionsAddress</span> <span class="tok-n">address</span><span class="tok-o">,</span> <span class="tok-n">Long</span> <span class="tok-n">age</span><span class="tok-o">,</span> <span class="tok-n">String</span> <span class="tok-n">firstName</span><span class="tok-o">,</span> <span class="tok-n">Link</span> <span class="tok-n">homePage</span><span class="tok-o">,</span> <span class="tok-n">String</span> <span class="tok-n">id</span><span class="tok-o">,</span> <span class="tok-n">String</span> <span class="tok-n">lastName</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setAddress</span><span class="tok-o">(</span><span class="tok-n">address</span><span class="tok-o">);</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setAge</span><span class="tok-o">(</span><span class="tok-n">age</span><span class="tok-o">);</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setFirstName</span><span class="tok-o">(</span><span class="tok-n">firstName</span><span class="tok-o">);</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setHomePage</span><span class="tok-o">(</span><span class="tok-n">homePage</span><span class="tok-o">);</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setId</span><span class="tok-o">(</span><span class="tok-n">id</span><span class="tok-o">);</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setLastName</span><span class="tok-o">(</span><span class="tok-n">lastName</span><span class="tok-o">);</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-n">UserDefinitionsAddress</span> <span class="tok-nf">getAddress</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">address</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setAddress</span><span class="tok-o">(</span><span class="tok-n">UserDefinitionsAddress</span> <span class="tok-n">address</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">address</span> <span class="tok-o">=</span> <span class="tok-n">address</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-n">Long</span> <span class="tok-nf">getAge</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">age</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setAge</span><span class="tok-o">(</span><span class="tok-n">Long</span> <span class="tok-n">age</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">age</span> <span class="tok-o">=</span> <span class="tok-n">age</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-n">String</span> <span class="tok-nf">getFirstName</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">firstName</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setFirstName</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">firstName</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">firstName</span> <span class="tok-o">=</span> <span class="tok-n">firstName</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-n">Link</span> <span class="tok-nf">getHomePage</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">homePage</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setHomePage</span><span class="tok-o">(</span><span class="tok-n">Link</span> <span class="tok-n">homePage</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">homePage</span> <span class="tok-o">=</span> <span class="tok-n">homePage</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-n">String</span> <span class="tok-nf">getId</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">id</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setId</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">id</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">id</span> <span class="tok-o">=</span> <span class="tok-n">id</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-n">String</span> <span class="tok-nf">getLastName</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">lastName</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setLastName</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">lastName</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">lastName</span> <span class="tok-o">=</span> <span class="tok-n">lastName</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
 
 <span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>JSON serialization is done with play-json 2.4, hence the dependency on <code>play.api.libs.json._</code> (together with ning our only external
-dependencies to use the DSL). The formatters are defined in the companion objects.</p>
+<p>JSON serialization is done with jackson, hence the dependency on jackson annotations, which is together with ning our only external
+dependency to use the DSL.</p>
 </div>
-<div id="scala-link" class="listingblock">
-<div class="title">Link case class</div>
+<div id="java-link" class="listingblock">
+<div class="title">Link POJO</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="scala"><span class="tok-k">package</span> <span class="tok-nn">io.atomicbits.schema</span>
+<pre class="pygments highlight"><code data-lang="java"><span class="tok-kn">package</span> <span class="tok-n">io</span><span class="tok-o">.</span><span class="tok-na">atomicbits</span><span class="tok-o">.</span><span class="tok-na">schema</span><span class="tok-o">;</span>
 
-<span class="tok-k">import</span> <span class="tok-nn">play.api.libs.json._</span>
+<span class="tok-kn">import</span> <span class="tok-nn">com.fasterxml.jackson.annotation.*</span><span class="tok-o">;</span>
 
-<span class="tok-k">case</span> <span class="tok-k">class</span> <span class="tok-nc">Link</span><span class="tok-o">(</span><span class="tok-n">href</span><span class="tok-k">:</span> <span class="tok-kt">String</span><span class="tok-o">,</span>
-                <span class="tok-n">method</span><span class="tok-k">:</span> <span class="tok-kt">Method</span><span class="tok-o">,</span>
-                <span class="tok-n">accept</span><span class="tok-k">:</span> <span class="tok-kt">Option</span><span class="tok-o">[</span><span class="tok-kt">String</span><span class="tok-o">]</span> <span class="tok-k">=</span> <span class="tok-nc">None</span><span class="tok-o">)</span>
+<span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">Link</span> <span class="tok-o">{</span>
 
-<span class="tok-k">object</span> <span class="tok-nc">Link</span> <span class="tok-o">{</span>
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;accept&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">String</span> <span class="tok-n">accept</span><span class="tok-o">;</span>
 
-  <span class="tok-k">implicit</span> <span class="tok-k">val</span> <span class="tok-n">jsonFormatter</span><span class="tok-k">:</span> <span class="tok-kt">Format</span><span class="tok-o">[</span><span class="tok-kt">Link</span><span class="tok-o">]</span> <span class="tok-k">=</span> <span class="tok-nc">Json</span><span class="tok-o">.</span><span class="tok-n">format</span><span class="tok-o">[</span><span class="tok-kt">Link</span><span class="tok-o">]</span>
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;href&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">String</span> <span class="tok-n">href</span><span class="tok-o">;</span>
+
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;method&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">Method</span> <span class="tok-n">method</span><span class="tok-o">;</span>
+
+    <span class="tok-kd">public</span> <span class="tok-nf">Link</span><span class="tok-o">()</span> <span class="tok-o">{}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-nf">Link</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">accept</span><span class="tok-o">,</span> <span class="tok-n">String</span> <span class="tok-n">href</span><span class="tok-o">,</span> <span class="tok-n">Method</span> <span class="tok-n">method</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setAccept</span><span class="tok-o">(</span><span class="tok-n">accept</span><span class="tok-o">);</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setHref</span><span class="tok-o">(</span><span class="tok-n">href</span><span class="tok-o">);</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setMethod</span><span class="tok-o">(</span><span class="tok-n">method</span><span class="tok-o">);</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-n">String</span> <span class="tok-nf">getAccept</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">accept</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setAccept</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">accept</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">accept</span> <span class="tok-o">=</span> <span class="tok-n">accept</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-n">String</span> <span class="tok-nf">getHref</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">href</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setHref</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">href</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">href</span> <span class="tok-o">=</span> <span class="tok-n">href</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-n">Method</span> <span class="tok-nf">getMethod</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">method</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setMethod</span><span class="tok-o">(</span><span class="tok-n">Method</span> <span class="tok-n">method</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">method</span> <span class="tok-o">=</span> <span class="tok-n">method</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
 
 <span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Enumerations like the <a href="#scala-method">Method enumeration</a> are implemented as a sealed trait with a name field and case objects for each choice in its
-companion object. JSON serialization goes directly to the name of the choice as a string without wrapper object.</p>
+<p>Enumerations like the <a href="#java-method">Method enumeration</a> are transformed into Java enums.</p>
 </div>
-<div id="scala-method" class="listingblock">
+<div id="java-method" class="listingblock">
 <div class="title">Method enumeration</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="scala"><span class="tok-k">package</span> <span class="tok-nn">io.atomicbits.schema</span>
+<pre class="pygments highlight"><code data-lang="java"><span class="tok-kn">package</span> <span class="tok-n">io</span><span class="tok-o">.</span><span class="tok-na">atomicbits</span><span class="tok-o">.</span><span class="tok-na">schema</span><span class="tok-o">;</span>
 
-<span class="tok-k">import</span> <span class="tok-nn">play.api.libs.json.</span><span class="tok-o">{</span><span class="tok-nc">Format</span><span class="tok-o">,</span> <span class="tok-nc">Json</span><span class="tok-o">,</span> <span class="tok-nc">JsResult</span><span class="tok-o">,</span> <span class="tok-nc">JsValue</span><span class="tok-o">,</span> <span class="tok-nc">JsString</span><span class="tok-o">}</span>
+<span class="tok-kd">public</span> <span class="tok-kd">enum</span> <span class="tok-n">Method</span> <span class="tok-o">{</span>
 
-<span class="tok-k">sealed</span> <span class="tok-k">trait</span> <span class="tok-nc">Method</span> <span class="tok-o">{</span>
-  <span class="tok-k">def</span> <span class="tok-n">name</span><span class="tok-k">:</span> <span class="tok-kt">String</span>
-<span class="tok-o">}</span>
+    <span class="tok-n">GET</span><span class="tok-o">,</span>
+    <span class="tok-n">PUT</span><span class="tok-o">,</span>
+    <span class="tok-n">POST</span><span class="tok-o">,</span>
+    <span class="tok-n">DELETE</span><span class="tok-o">,</span>
+    <span class="tok-n">HEAD</span><span class="tok-o">,</span>
+    <span class="tok-n">CONNECT</span><span class="tok-o">,</span>
+    <span class="tok-n">TRACE</span><span class="tok-o">,</span>
+    <span class="tok-n">OPTIONS</span>
 
-<span class="tok-k">object</span> <span class="tok-nc">Method</span> <span class="tok-o">{</span>
-
-  <span class="tok-k">case</span> <span class="tok-k">object</span> <span class="tok-nc">GET</span> <span class="tok-k">extends</span> <span class="tok-nc">Method</span> <span class="tok-o">{</span>
-    <span class="tok-k">val</span> <span class="tok-n">name</span> <span class="tok-k">=</span> <span class="tok-s">&quot;GET&quot;</span>
-  <span class="tok-o">}</span>
-
-  <span class="tok-k">case</span> <span class="tok-k">object</span> <span class="tok-nc">PUT</span> <span class="tok-k">extends</span> <span class="tok-nc">Method</span> <span class="tok-o">{</span>
-    <span class="tok-k">val</span> <span class="tok-n">name</span> <span class="tok-k">=</span> <span class="tok-s">&quot;PUT&quot;</span>
-  <span class="tok-o">}</span>
-
-  <span class="tok-k">case</span> <span class="tok-k">object</span> <span class="tok-nc">POST</span> <span class="tok-k">extends</span> <span class="tok-nc">Method</span> <span class="tok-o">{</span>
-    <span class="tok-k">val</span> <span class="tok-n">name</span> <span class="tok-k">=</span> <span class="tok-s">&quot;POST&quot;</span>
-  <span class="tok-o">}</span>
-
-  <span class="tok-k">case</span> <span class="tok-k">object</span> <span class="tok-nc">DELETE</span> <span class="tok-k">extends</span> <span class="tok-nc">Method</span> <span class="tok-o">{</span>
-    <span class="tok-k">val</span> <span class="tok-n">name</span> <span class="tok-k">=</span> <span class="tok-s">&quot;DELETE&quot;</span>
-  <span class="tok-o">}</span>
-
-  <span class="tok-k">case</span> <span class="tok-k">object</span> <span class="tok-nc">HEAD</span> <span class="tok-k">extends</span> <span class="tok-nc">Method</span> <span class="tok-o">{</span>
-    <span class="tok-k">val</span> <span class="tok-n">name</span> <span class="tok-k">=</span> <span class="tok-s">&quot;HEAD&quot;</span>
-  <span class="tok-o">}</span>
-
-  <span class="tok-k">case</span> <span class="tok-k">object</span> <span class="tok-nc">CONNECT</span> <span class="tok-k">extends</span> <span class="tok-nc">Method</span> <span class="tok-o">{</span>
-    <span class="tok-k">val</span> <span class="tok-n">name</span> <span class="tok-k">=</span> <span class="tok-s">&quot;CONNECT&quot;</span>
-  <span class="tok-o">}</span>
-
-  <span class="tok-k">case</span> <span class="tok-k">object</span> <span class="tok-nc">TRACE</span> <span class="tok-k">extends</span> <span class="tok-nc">Method</span> <span class="tok-o">{</span>
-    <span class="tok-k">val</span> <span class="tok-n">name</span> <span class="tok-k">=</span> <span class="tok-s">&quot;TRACE&quot;</span>
-  <span class="tok-o">}</span>
-
-  <span class="tok-k">case</span> <span class="tok-k">object</span> <span class="tok-nc">OPTIONS</span> <span class="tok-k">extends</span> <span class="tok-nc">Method</span> <span class="tok-o">{</span>
-    <span class="tok-k">val</span> <span class="tok-n">name</span> <span class="tok-k">=</span> <span class="tok-s">&quot;OPTIONS&quot;</span>
-  <span class="tok-o">}</span>
-
-  <span class="tok-k">val</span> <span class="tok-n">byName</span> <span class="tok-k">=</span> <span class="tok-nc">Map</span><span class="tok-o">(</span>
-    <span class="tok-nc">GET</span><span class="tok-o">.</span><span class="tok-n">name</span> <span class="tok-o">→</span> <span class="tok-nc">GET</span><span class="tok-o">,</span> <span class="tok-nc">PUT</span><span class="tok-o">.</span><span class="tok-n">name</span> <span class="tok-o">→</span> <span class="tok-nc">PUT</span><span class="tok-o">,</span> <span class="tok-nc">POST</span><span class="tok-o">.</span><span class="tok-n">name</span> <span class="tok-o">→</span> <span class="tok-nc">POST</span><span class="tok-o">,</span> <span class="tok-nc">DELETE</span><span class="tok-o">.</span><span class="tok-n">name</span> <span class="tok-o">→</span> <span class="tok-nc">DELETE</span><span class="tok-o">,</span> <span class="tok-nc">HEAD</span><span class="tok-o">.</span><span class="tok-n">name</span> <span class="tok-o">→</span> <span class="tok-nc">HEAD</span><span class="tok-o">,</span> <span class="tok-nc">CONNECT</span><span class="tok-o">.</span><span class="tok-n">name</span> <span class="tok-o">→</span> <span class="tok-nc">CONNECT</span><span class="tok-o">,</span> <span class="tok-nc">TRACE</span><span class="tok-o">.</span><span class="tok-n">name</span> <span class="tok-o">→</span> <span class="tok-nc">TRACE</span><span class="tok-o">,</span> <span class="tok-nc">OPTIONS</span><span class="tok-o">.</span><span class="tok-n">name</span> <span class="tok-o">→</span> <span class="tok-nc">OPTIONS</span>
-  <span class="tok-o">)</span>
-
-  <span class="tok-k">implicit</span> <span class="tok-k">val</span> <span class="tok-nc">MethodFormat</span> <span class="tok-k">=</span> <span class="tok-k">new</span> <span class="tok-nc">Format</span><span class="tok-o">[</span><span class="tok-kt">Method</span><span class="tok-o">]</span> <span class="tok-o">{</span>
-
-    <span class="tok-k">override</span> <span class="tok-k">def</span> <span class="tok-n">reads</span><span class="tok-o">(</span><span class="tok-n">json</span><span class="tok-k">:</span> <span class="tok-kt">JsValue</span><span class="tok-o">)</span><span class="tok-k">:</span> <span class="tok-kt">JsResult</span><span class="tok-o">[</span><span class="tok-kt">Method</span><span class="tok-o">]</span> <span class="tok-k">=</span> <span class="tok-o">{</span>
-      <span class="tok-n">json</span><span class="tok-o">.</span><span class="tok-n">validate</span><span class="tok-o">[</span><span class="tok-kt">String</span><span class="tok-o">].</span><span class="tok-n">map</span><span class="tok-o">(</span><span class="tok-nc">Method</span><span class="tok-o">.</span><span class="tok-n">byName</span><span class="tok-o">(</span><span class="tok-k">_</span><span class="tok-o">))</span>
-    <span class="tok-o">}</span>
-
-    <span class="tok-k">override</span> <span class="tok-k">def</span> <span class="tok-n">writes</span><span class="tok-o">(</span><span class="tok-n">o</span><span class="tok-k">:</span> <span class="tok-kt">Method</span><span class="tok-o">)</span><span class="tok-k">:</span> <span class="tok-kt">JsValue</span> <span class="tok-o">=</span> <span class="tok-o">{</span>
-      <span class="tok-nc">JsString</span><span class="tok-o">(</span><span class="tok-n">o</span><span class="tok-o">.</span><span class="tok-n">name</span><span class="tok-o">)</span>
-    <span class="tok-o">}</span>
-  <span class="tok-o">}</span>
 <span class="tok-o">}</span></code></pre>
 </div>
 </div>
@@ -407,7 +463,7 @@ schemas.</p>
 <p>Next, we have a <code>multipart/form-data</code> POST action on <code>/rest/user/upload</code> and a resource that takes URL-parameters: <code>/rest/user/{userid}</code>.
 The <code>userid</code> URL-parameter is defined as a string and <span class="scramlfont">Scraml</span> will enforce this. There is a form-POST action on
 this resource with a required and a non-required form field. The response will have a JSON format, but it is not defined which schema it
-follows. This will imply that we don&#8217;t have type information in the DSL on that response. Finally, we have a DELETE action and a
+follows. This implies that we don&#8217;t have type information in the DSL on that response. Finally, we have a DELETE action and a
 POST action that sends a User and receives a Link.</p>
 </div>
 <div id="raml-userservice" class="listingblock">
@@ -454,37 +510,31 @@ POST action that sends a User and receives a Link.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Compiling the codebase using sbt, <span class="scramlfont">Scraml</span> will generate the DSL in the code generation step before actual compilation. This
+<p>Compiling the codebase using maven, <span class="scramlfont">Scraml</span> will generate the DSL in the code generation step before actual compilation. This
 results in a client that provides access to the resources we described above. Let&#8217;s assume the above RAML file sits in the folder
 <code>io/atomicbits/api/</code> under the resources folder and the filename is <code>user-api.raml</code>. The resulting DSL can be used to do the following.</p>
 </div>
-<div id="scala-client" class="listingblock">
+<div id="java-client" class="listingblock">
 <div class="title">client DSL code</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="scala">  <span class="tok-k">import</span> <span class="tok-nn">io.atomicbits.api.UserApi</span>
+<pre class="pygments highlight"><code data-lang="java">  <span class="tok-kn">import</span> <span class="tok-nn">io.atomicbits.api.UserApi</span><span class="tok-o">;</span>
   <span class="tok-o">...</span>
-  <span class="tok-k">val</span> <span class="tok-n">client</span> <span class="tok-k">=</span> <span class="tok-k">new</span> <span class="tok-nc">UserApi</span><span class="tok-o">(</span> <i class="conum" data-value="1"></i><b>(1)</b>
-    <span class="tok-n">host</span> <span class="tok-k">=</span> <span class="tok-s">&quot;localhost&quot;</span><span class="tok-o">,</span>
-    <span class="tok-n">port</span> <span class="tok-k">=</span> <span class="tok-mi">8281</span><span class="tok-o">,</span>
-    <span class="tok-n">protocol</span> <span class="tok-k">=</span> <span class="tok-s">&quot;http&quot;</span><span class="tok-o">,</span>
-    <span class="tok-n">defaultHeaders</span> <span class="tok-k">=</span> <span class="tok-nc">Map</span><span class="tok-o">(),</span>
-    <span class="tok-n">prefix</span> <span class="tok-k">=</span> <span class="tok-nc">None</span><span class="tok-o">,</span>
-    <span class="tok-n">config</span> <span class="tok-k">=</span> <span class="tok-nc">ClientConfig</span><span class="tok-o">()</span>
-  <span class="tok-o">)</span>
+  <span class="tok-n">UserApi</span> <span class="tok-n">client</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-nf">UserApi</span><span class="tok-o">(</span><span class="tok-s">&quot;localhost&quot;</span><span class="tok-o">,</span> <span class="tok-mi">8281</span><span class="tok-o">,</span> <span class="tok-s">&quot;http&quot;</span><span class="tok-o">,</span> <span class="tok-kc">null</span><span class="tok-o">,</span> <span class="tok-k">new</span> <span class="tok-nf">ClientConfig</span><span class="tok-o">(),</span> <span class="tok-k">new</span> <span class="tok-n">HashMap</span><span class="tok-o">&lt;&gt;());</span> <i class="conum" data-value="1"></i><b>(1)</b>
 
-  <span class="tok-k">val</span> <span class="tok-n">userResource</span> <span class="tok-k">=</span> <span class="tok-n">client</span><span class="tok-o">.</span><span class="tok-n">rest</span><span class="tok-o">.</span><span class="tok-n">user</span> <i class="conum" data-value="2"></i><b>(2)</b>
+  <span class="tok-n">UserResource</span> <span class="tok-n">userResource</span> <span class="tok-o">=</span> <span class="tok-n">client</span><span class="tok-o">.</span><span class="tok-na">rest</span><span class="tok-o">.</span><span class="tok-na">user</span><span class="tok-o">;</span> <i class="conum" data-value="2"></i><b>(2)</b>
 
-  <span class="tok-k">val</span> <span class="tok-n">eventualUsersResponse</span><span class="tok-k">:</span> <span class="tok-kt">Future</span><span class="tok-o">[</span><span class="tok-kt">Response</span><span class="tok-o">[</span><span class="tok-kt">List</span><span class="tok-o">[</span><span class="tok-kt">User</span><span class="tok-o">]]]</span> <span class="tok-k">=</span> <i class="conum" data-value="5"></i><b>(5)</b>
+  <span class="tok-n">CompletableFuture</span><span class="tok-o">&lt;</span><span class="tok-n">Response</span><span class="tok-o">&lt;</span><span class="tok-n">User</span><span class="tok-o">&gt;&gt;</span> <span class="tok-n">eventualUser</span> <span class="tok-o">=</span> <i class="conum" data-value="5"></i><b>(5)</b>
     <span class="tok-n">userResource</span>
-      <span class="tok-o">.</span><span class="tok-n">get</span><span class="tok-o">(</span> <i class="conum" data-value="3"></i><b>(3)</b>
-        <span class="tok-n">age</span> <span class="tok-k">=</span> <span class="tok-nc">Some</span><span class="tok-o">(</span><span class="tok-mi">51</span><span class="tok-o">),</span>
-        <span class="tok-n">firstName</span> <span class="tok-k">=</span> <span class="tok-nc">Some</span><span class="tok-o">(</span><span class="tok-s">&quot;John&quot;</span><span class="tok-o">),</span>
-        <span class="tok-n">lastName</span> <span class="tok-k">=</span> <span class="tok-nc">None</span><span class="tok-o">,</span>
-        <span class="tok-n">organization</span> <span class="tok-k">=</span> <span class="tok-nc">List</span><span class="tok-o">(</span><span class="tok-s">&quot;ESA&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;NASA&quot;</span><span class="tok-o">)</span> <i class="conum" data-value="4"></i><b>(4)</b>
-      <span class="tok-o">)</span>
+      <span class="tok-o">.</span><span class="tok-na">get</span><span class="tok-o">(</span> <i class="conum" data-value="3"></i><b>(3)</b>
+        <span class="tok-mi">51L</span><span class="tok-o">,</span>
+        <span class="tok-s">&quot;John&quot;</span><span class="tok-o">,</span>
+        <span class="tok-kc">null</span><span class="tok-o">,</span>
+        <span class="tok-n">Arrays</span><span class="tok-o">.</span><span class="tok-na">asList</span><span class="tok-o">(</span><span class="tok-s">&quot;ESA&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;NASA&quot;</span><span class="tok-o">)</span> <i class="conum" data-value="4"></i><b>(4)</b>
+      <span class="tok-o">);</span>
 
-  <span class="tok-k">val</span> <span class="tok-n">usersResponse</span><span class="tok-k">:</span> <span class="tok-kt">Response</span><span class="tok-o">[</span><span class="tok-kt">List</span><span class="tok-o">[</span><span class="tok-kt">User</span><span class="tok-o">]]</span> <span class="tok-k">=</span> <span class="tok-nc">Await</span><span class="tok-o">.</span><span class="tok-n">result</span><span class="tok-o">(</span><span class="tok-n">eventualUsersResponse</span><span class="tok-o">,</span> <span class="tok-mi">2</span> <span class="tok-n">seconds</span><span class="tok-o">)</span>
-  <span class="tok-k">val</span> <span class="tok-n">users</span><span class="tok-k">:</span> <span class="tok-kt">List</span><span class="tok-o">[</span><span class="tok-kt">User</span><span class="tok-o">]</span> <span class="tok-k">=</span> <span class="tok-n">usersResponse</span><span class="tok-o">.</span><span class="tok-n">body</span></code></pre>
+  <span class="tok-n">Response</span><span class="tok-o">&lt;</span><span class="tok-n">List</span><span class="tok-o">&lt;</span><span class="tok-n">User</span><span class="tok-o">&gt;&gt;</span> <span class="tok-n">usersResponse</span> <span class="tok-o">=</span> <span class="tok-n">eventualUser</span><span class="tok-o">.</span><span class="tok-na">get</span><span class="tok-o">(</span><span class="tok-mi">10</span><span class="tok-o">,</span> <span class="tok-n">TimeUnit</span><span class="tok-o">.</span><span class="tok-na">SECONDS</span><span class="tok-o">);</span>
+
+  <span class="tok-n">List</span><span class="tok-o">&lt;</span><span class="tok-n">User</span><span class="tok-o">&gt;</span> <span class="tok-n">users</span> <span class="tok-o">=</span> <span class="tok-n">usersResponse</span><span class="tok-o">.</span><span class="tok-na">getBody</span><span class="tok-o">();</span></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -507,7 +557,7 @@ results in a client that provides access to the resources we described above. Le
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>The result is asynchronous (hence the <code>Future[]</code>) and it is wrapped inside a <code>Result[T]</code> object. The body is a <code>List[User]</code>, matching the array of user type that is defined in the schema for this resource. <code>Result[T]</code> also contains the response headers and status code.</td>
+<td>The result is asynchronous (hence the <code>Future&lt;&gt;</code>) and it is wrapped inside a <code>Result&lt;T&gt;</code> object. The body is a <code>List&lt;User&gt;</code>, matching the array of user type that is defined in the schema for this resource. <code>Result&lt;T&gt;</code> also contains the response headers and status code.</td>
 </tr>
 </table>
 </div>
@@ -518,11 +568,10 @@ configuring a <code>ClientConfig</code> object. It takes parameters such as <cod
 <code>connectionTTL</code>, <code>maxConnections</code>, <code>maxConnectionsPerHost</code>, <code>allowPoolingConnections</code> and several more. These parameters are passed to
 the underlying ning client that handles the actual requests. The rest path is constructed in the DSL by following the corresponding
 field paths on the DSL entries: <code>client.rest.user</code> corresponds to the resource on <code>http:\\localhost:8281\rest\user</code>. The <code>.get(&#8230;&#8203;)</code>
-action executes the actual request with some additional query parameters that are passed to the <code>.get()</code> method. The query parameters in
-the RAML example above weren&#8217;t required parameters (default is false). That&#8217;s why we need to wrap the parameters as an <code>Option[T]</code> here.
+action executes the actual request with some additional query parameters that are passed to the <code>.get()</code> method.
 The <code>organization</code> query parameter has the <code>repeat: true</code> setting, which results in a <code>List[String]</code> parameter on the GET action.</p>
 </div>
-<div id="scala-request-get" class="listingblock">
+<div id="request-get" class="listingblock">
 <div class="title">GET request with query parameters</div>
 <div class="content">
 <pre>GET
@@ -530,7 +579,7 @@ http://localhost:8281/rest/user?age=51.0&amp;firstName=John&amp;organization=ESA
 headers:	Accept=application/json</pre>
 </div>
 </div>
-<div id="scala-response-get" class="listingblock">
+<div id="response-get" class="listingblock">
 <div class="title">GET response</div>
 <div class="content">
 <pre>headers:  "Transfer-Encoding=chunked"; "Server=Jetty(6.1.26)"
@@ -539,10 +588,10 @@ status:   200 "OK"</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In <a href="#scala-request-get">GET request with query parameters</a>, we see what the actual request looks like that goes out. Mind the double organization query parameter to match
+<p>In <a href="#request-get">GET request with query parameters</a>, we see what the actual request looks like that goes out. Mind the double organization query parameter to match
 the repeated character for this parameter. Also notice that <span class="scramlfont">Scraml</span> automatically adds the accept header that was specified
 in the RAML model for this GET action. The same goes for the <code>Content-Type</code> header when a request body is present. The result of
-the <a href="#scala-response-get">GET response</a> shows that the result is a <code>200 "OK"</code> response whose body contains a list of user object in JSON format.</p>
+the <a href="#response-get">GET response</a> shows that the result is a <code>200 "OK"</code> response whose body contains a list of user object in JSON format.</p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s add some <a href="#raml-userservice-more">more actions in the user service</a> and see how <span class="scramlfont">Scraml</span> handles it.</p>
@@ -597,49 +646,53 @@ and PUT. The POST action represents a form post that contains a string parameter
 type is not specified. The DELETE action has no specific configuration at all, and the PUT action sends a user object as JSON in the
 request and expects a link object as JSON in its response. Finally, there is also a <code>/rest/user/upload</code> resource on which a
 multipart form upload is defined. After running <span class="scramlfont">Scraml</span> in the source-generation step of sbt, we get a DSL that enables
-<a href="#scala-client-more">more client DSL functionality</a>.</p>
+<a href="#java-client-more">more client DSL functionality</a>.</p>
 </div>
-<div id="scala-client-more" class="listingblock">
+<div id="java-client-more" class="listingblock">
 <div class="title">more client DSL functionality</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="scala">  <span class="tok-k">val</span> <span class="tok-n">userFoobarResource</span> <span class="tok-k">=</span> <span class="tok-n">client</span><span class="tok-o">.</span><span class="tok-n">rest</span><span class="tok-o">.</span><span class="tok-n">user</span><span class="tok-o">.</span><span class="tok-n">userid</span><span class="tok-o">(</span><span class="tok-s">&quot;foobar&quot;</span><span class="tok-o">)</span> <i class="conum" data-value="1"></i><b>(1)</b>
+<pre class="pygments highlight"><code data-lang="java">  <span class="tok-n">UseridResource</span> <span class="tok-n">userFoobarResource</span> <span class="tok-o">=</span> <span class="tok-n">client</span><span class="tok-o">.</span><span class="tok-na">rest</span><span class="tok-o">.</span><span class="tok-na">user</span><span class="tok-o">.</span><span class="tok-na">userid</span><span class="tok-o">(</span><span class="tok-s">&quot;foobar&quot;</span><span class="tok-o">);</span> <i class="conum" data-value="1"></i><b>(1)</b>
 
 
   <span class="tok-c1">// POST</span>
-  <span class="tok-k">val</span> <span class="tok-n">eventualPostResponse</span><span class="tok-k">:</span> <span class="tok-kt">Future</span><span class="tok-o">[</span><span class="tok-kt">Response</span><span class="tok-o">[</span><span class="tok-kt">String</span><span class="tok-o">]]</span> <span class="tok-k">=</span>
-    <span class="tok-n">userFoobarResource</span>
-      <span class="tok-o">.</span><span class="tok-n">post</span><span class="tok-o">(</span><span class="tok-n">text</span> <span class="tok-k">=</span> <span class="tok-s">&quot;Hello Foobar&quot;</span><span class="tok-o">,</span> <span class="tok-n">value</span> <span class="tok-k">=</span> <span class="tok-nc">None</span><span class="tok-o">)</span> <i class="conum" data-value="2"></i><b>(2)</b>
+  <span class="tok-n">CompletableFuture</span><span class="tok-o">&lt;</span><span class="tok-n">Response</span><span class="tok-o">&lt;</span><span class="tok-n">String</span><span class="tok-o">&gt;&gt;</span> <span class="tok-n">eventualPostResponse</span> <span class="tok-o">=</span>
+    <span class="tok-n">userFoobarResource</span><span class="tok-o">.</span><span class="tok-na">post</span><span class="tok-o">(</span><span class="tok-s">&quot;Hello Foobar&quot;</span><span class="tok-o">,</span> <span class="tok-kc">null</span><span class="tok-o">);</span> <i class="conum" data-value="2"></i><b>(2)</b>
 
-  <span class="tok-k">val</span> <span class="tok-n">postResponse</span><span class="tok-k">:</span> <span class="tok-kt">Response</span><span class="tok-o">[</span><span class="tok-kt">String</span><span class="tok-o">]</span> <span class="tok-k">=</span> <span class="tok-nc">Await</span><span class="tok-o">.</span><span class="tok-n">result</span><span class="tok-o">(</span><span class="tok-n">eventualPostResponse</span><span class="tok-o">,</span> <span class="tok-mi">2</span> <span class="tok-n">seconds</span><span class="tok-o">)</span>  <i class="conum" data-value="3"></i><b>(3)</b>
+  <span class="tok-n">Response</span><span class="tok-o">&lt;</span><span class="tok-n">String</span><span class="tok-o">&gt;</span> <span class="tok-n">postResponse</span> <span class="tok-o">=</span> <span class="tok-n">eventualPostResponse</span><span class="tok-o">.</span><span class="tok-na">get</span><span class="tok-o">(</span><span class="tok-mi">10</span><span class="tok-o">,</span> <span class="tok-n">TimeUnit</span><span class="tok-o">.</span><span class="tok-na">SECONDS</span><span class="tok-o">);</span> <i class="conum" data-value="3"></i><b>(3)</b>
 
-  <span class="tok-n">assertResult</span><span class="tok-o">(</span><span class="tok-mi">200</span><span class="tok-o">)(</span><span class="tok-n">postResponse</span><span class="tok-o">.</span><span class="tok-n">status</span><span class="tok-o">)</span> <i class="conum" data-value="4"></i><b>(4)</b>
-  <span class="tok-n">assertResult</span><span class="tok-o">(</span><span class="tok-s">&quot;Some server response&quot;</span><span class="tok-o">)(</span><span class="tok-n">postResponse</span><span class="tok-o">.</span><span class="tok-n">body</span><span class="tok-o">)</span> <i class="conum" data-value="5"></i><b>(5)</b>
+  <span class="tok-n">assertEquals</span><span class="tok-o">(</span><span class="tok-mi">200</span><span class="tok-o">,</span> <span class="tok-n">postResponse</span><span class="tok-o">.</span><span class="tok-na">getStatus</span><span class="tok-o">());</span> <i class="conum" data-value="4"></i><b>(4)</b>
+  <span class="tok-n">assertEquals</span><span class="tok-o">(</span><span class="tok-s">&quot;Post OK&quot;</span><span class="tok-o">,</span> <span class="tok-n">postResponse</span><span class="tok-o">.</span><span class="tok-na">getBody</span><span class="tok-o">());</span> <i class="conum" data-value="5"></i><b>(5)</b>
 
 
   <span class="tok-c1">// DELETE</span>
-  <span class="tok-k">val</span> <span class="tok-n">eventualDeleteResponse</span><span class="tok-k">:</span> <span class="tok-kt">Future</span><span class="tok-o">[</span><span class="tok-kt">Response</span><span class="tok-o">[</span><span class="tok-kt">String</span><span class="tok-o">]]</span> <span class="tok-k">=</span> <span class="tok-n">userFoobarResource</span><span class="tok-o">.</span><span class="tok-n">delete</span><span class="tok-o">()</span>
-  <span class="tok-k">val</span> <span class="tok-n">deleteResponse</span> <span class="tok-k">=</span> <span class="tok-nc">Await</span><span class="tok-o">.</span><span class="tok-n">result</span><span class="tok-o">(</span><span class="tok-n">eventualDeleteResponse</span><span class="tok-o">,</span> <span class="tok-mi">2</span> <span class="tok-n">seconds</span><span class="tok-o">)</span>
-  <span class="tok-n">assertResult</span><span class="tok-o">(</span><span class="tok-mi">200</span><span class="tok-o">)(</span><span class="tok-n">deleteResponse</span><span class="tok-o">.</span><span class="tok-n">status</span><span class="tok-o">)</span>
+  <span class="tok-n">CompletableFuture</span><span class="tok-o">&lt;</span><span class="tok-n">Response</span><span class="tok-o">&lt;</span><span class="tok-n">String</span><span class="tok-o">&gt;&gt;</span> <span class="tok-n">eventualDeleteResponse</span> <span class="tok-o">=</span> <span class="tok-n">userFoobarResource</span><span class="tok-o">.</span><span class="tok-na">delete</span><span class="tok-o">();</span>
+  <span class="tok-n">Response</span><span class="tok-o">&lt;</span><span class="tok-n">String</span><span class="tok-o">&gt;</span> <span class="tok-n">deleteResponse</span> <span class="tok-o">=</span> <span class="tok-n">eventualDeleteResponse</span><span class="tok-o">.</span><span class="tok-na">get</span><span class="tok-o">(</span><span class="tok-mi">10</span><span class="tok-o">,</span> <span class="tok-n">TimeUnit</span><span class="tok-o">.</span><span class="tok-na">SECONDS</span><span class="tok-o">);</span>
+  <span class="tok-n">assertEquals</span><span class="tok-o">(</span><span class="tok-mi">200</span><span class="tok-o">,</span> <span class="tok-n">deleteResponse</span><span class="tok-o">.</span><span class="tok-na">getStatus</span><span class="tok-o">());</span>
 
 
   <span class="tok-c1">// PUT</span>
-  <span class="tok-k">val</span> <span class="tok-n">user</span> <span class="tok-k">=</span> <span class="tok-nc">User</span><span class="tok-o">(</span>
-    <span class="tok-n">homePage</span> <span class="tok-k">=</span> <span class="tok-nc">Some</span><span class="tok-o">(</span><span class="tok-nc">Link</span><span class="tok-o">(</span><span class="tok-s">&quot;http://foo.bar&quot;</span><span class="tok-o">,</span> <span class="tok-nc">Method</span><span class="tok-o">.</span><span class="tok-nc">GET</span><span class="tok-o">,</span> <span class="tok-nc">None</span><span class="tok-o">)),</span>
-    <span class="tok-n">address</span> <span class="tok-k">=</span> <span class="tok-nc">Some</span><span class="tok-o">(</span><span class="tok-nc">UserDefinitionsAddress</span><span class="tok-o">(</span><span class="tok-s">&quot;Mulholland Drive&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;LA&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;California&quot;</span><span class="tok-o">)),</span>
-    <span class="tok-n">age</span> <span class="tok-k">=</span> <span class="tok-mi">21</span><span class="tok-o">,</span>
-    <span class="tok-n">firstName</span> <span class="tok-k">=</span> <span class="tok-s">&quot;John&quot;</span><span class="tok-o">,</span>
-    <span class="tok-n">lastName</span> <span class="tok-k">=</span> <span class="tok-s">&quot;Doe&quot;</span><span class="tok-o">,</span>
-    <span class="tok-n">id</span> <span class="tok-k">=</span> <span class="tok-s">&quot;1&quot;</span>
-  <span class="tok-o">)</span>
+  <span class="tok-n">User</span> <span class="tok-n">user</span> <span class="tok-o">=</span> <span class="tok-k">new</span> <span class="tok-nf">User</span><span class="tok-o">(</span>
+    <span class="tok-k">new</span> <span class="tok-nf">UserDefinitionsAddress</span><span class="tok-o">(</span><span class="tok-s">&quot;LA&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;California&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;Mulholland Drive&quot;</span><span class="tok-o">),</span>
+    <span class="tok-mi">21L</span><span class="tok-o">,</span>
+    <span class="tok-s">&quot;Doe&quot;</span><span class="tok-o">,</span>
+    <span class="tok-k">new</span> <span class="tok-nf">Link</span><span class="tok-o">(</span><span class="tok-kc">null</span><span class="tok-o">,</span> <span class="tok-s">&quot;http://foo.bar&quot;</span><span class="tok-o">,</span> <span class="tok-n">Method</span><span class="tok-o">.</span><span class="tok-na">GET</span><span class="tok-o">),</span>
+    <span class="tok-s">&quot;1&quot;</span><span class="tok-o">,</span>
+    <span class="tok-s">&quot;John&quot;</span>
+  <span class="tok-o">);</span>
 
-  <span class="tok-k">val</span> <span class="tok-n">eventualPutResponse</span><span class="tok-k">:</span> <span class="tok-kt">Future</span><span class="tok-o">[</span><span class="tok-kt">Response</span><span class="tok-o">[</span><span class="tok-kt">Link</span><span class="tok-o">]]</span> <span class="tok-k">=</span> <span class="tok-n">userFoobarResource</span><span class="tok-o">.</span><span class="tok-n">put</span><span class="tok-o">(</span><span class="tok-n">user</span><span class="tok-o">)</span>
-  <span class="tok-k">val</span> <span class="tok-n">putResponse</span> <span class="tok-k">=</span> <span class="tok-nc">Await</span><span class="tok-o">.</span><span class="tok-n">result</span><span class="tok-o">(</span><span class="tok-n">eventualPutResponse</span><span class="tok-o">,</span> <span class="tok-mi">2</span> <span class="tok-n">seconds</span><span class="tok-o">)</span>
-  <span class="tok-n">assertResult</span><span class="tok-o">(</span><span class="tok-nc">Link</span><span class="tok-o">(</span><span class="tok-s">&quot;http://foo.bar&quot;</span><span class="tok-o">,</span> <span class="tok-nc">Method</span><span class="tok-o">.</span><span class="tok-nc">GET</span><span class="tok-o">,</span> <span class="tok-nc">None</span><span class="tok-o">))(</span><span class="tok-n">putResponse</span><span class="tok-o">.</span><span class="tok-n">body</span><span class="tok-o">)</span>
+  <span class="tok-n">CompletableFuture</span><span class="tok-o">&lt;</span><span class="tok-n">Response</span><span class="tok-o">&lt;</span><span class="tok-n">Link</span><span class="tok-o">&gt;&gt;</span> <span class="tok-n">eventualPutResponse</span> <span class="tok-o">=</span>
+    <span class="tok-n">userFoobarResource</span><span class="tok-o">.</span><span class="tok-na">put</span><span class="tok-o">(</span><span class="tok-n">user</span><span class="tok-o">);</span>
+
+  <span class="tok-n">Link</span> <span class="tok-n">link</span> <span class="tok-o">=</span> <span class="tok-n">eventualPutResponse</span><span class="tok-o">.</span><span class="tok-na">get</span><span class="tok-o">(</span><span class="tok-mi">10</span><span class="tok-o">,</span> <span class="tok-n">TimeUnit</span><span class="tok-o">.</span><span class="tok-na">SECONDS</span><span class="tok-o">).</span><span class="tok-na">getBody</span><span class="tok-o">();</span>
+  <span class="tok-n">assertEquals</span><span class="tok-o">(</span><span class="tok-s">&quot;http://foo.bar&quot;</span><span class="tok-o">,</span> <span class="tok-n">link</span><span class="tok-o">.</span><span class="tok-na">getHref</span><span class="tok-o">());</span>
 
 
   <span class="tok-c1">// multipart form POST</span>
-  <span class="tok-k">val</span> <span class="tok-n">multipartFormPostResponse</span><span class="tok-k">:</span> <span class="tok-kt">Future</span><span class="tok-o">[</span><span class="tok-kt">Response</span><span class="tok-o">[</span><span class="tok-kt">String</span><span class="tok-o">]]</span> <span class="tok-k">=</span>
-    <span class="tok-n">client</span><span class="tok-o">.</span><span class="tok-n">rest</span><span class="tok-o">.</span><span class="tok-n">user</span><span class="tok-o">.</span><span class="tok-n">upload</span><span class="tok-o">.</span><span class="tok-n">post</span><span class="tok-o">(</span><span class="tok-nc">List</span><span class="tok-o">(</span><span class="tok-nc">StringPart</span><span class="tok-o">(</span><span class="tok-n">name</span> <span class="tok-k">=</span> <span class="tok-s">&quot;test&quot;</span><span class="tok-o">,</span> <span class="tok-n">value</span> <span class="tok-k">=</span> <span class="tok-s">&quot;string part value&quot;</span><span class="tok-o">)))</span> <i class="conum" data-value="6"></i><b>(6)</b></code></pre>
+  <span class="tok-n">List</span><span class="tok-o">&lt;</span><span class="tok-n">BodyPart</span><span class="tok-o">&gt;</span> <span class="tok-n">bodyParts</span> <span class="tok-o">=</span>
+    <span class="tok-n">Collections</span><span class="tok-o">.</span><span class="tok-na">singletonList</span><span class="tok-o">(</span><span class="tok-k">new</span> <span class="tok-nf">StringPart</span><span class="tok-o">(</span><span class="tok-s">&quot;test&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;string part value&quot;</span><span class="tok-o">));</span>
+
+  <span class="tok-n">CompletableFuture</span><span class="tok-o">&lt;</span><span class="tok-n">Response</span><span class="tok-o">&lt;</span><span class="tok-n">String</span><span class="tok-o">&gt;&gt;</span> <span class="tok-n">multipartFormPostResponse</span> <span class="tok-o">=</span>
+    <span class="tok-n">client</span><span class="tok-o">.</span><span class="tok-na">rest</span><span class="tok-o">.</span><span class="tok-na">user</span><span class="tok-o">.</span><span class="tok-na">upload</span><span class="tok-o">.</span><span class="tok-na">post</span><span class="tok-o">(</span><span class="tok-n">bodyParts</span><span class="tok-o">);</span> <i class="conum" data-value="6"></i><b>(6)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -675,28 +728,30 @@ multipart form upload is defined. After running <span class="scramlfont">Scraml<
 <h3 id="_adding_custom_headers">Adding custom headers</h3>
 <div class="paragraph">
 <p><span class="scramlfont">Scraml</span> allows you to add one or more headers on each resource in the DSL. The following example illustrates how to
-<a href="#scala-custom-headers">add custom headers</a> before calling a PUT action.</p>
+<a href="#java-custom-headers">add custom headers</a> before calling a PUT action.</p>
 </div>
-<div id="scala-custom-headers" class="listingblock">
+<div id="java-custom-headers" class="listingblock">
 <div class="title">add custom headers</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="scala"><span class="tok-k">val</span> <span class="tok-n">listBodyResponse</span> <span class="tok-k">=</span>
-  <span class="tok-n">client</span><span class="tok-o">.</span><span class="tok-n">rest</span><span class="tok-o">.</span><span class="tok-n">user</span><span class="tok-o">.</span><span class="tok-n">activate</span>
-    <span class="tok-o">.</span><span class="tok-n">addHeaders</span><span class="tok-o">(</span><span class="tok-s">&quot;Cookie&quot;</span> <span class="tok-o">-&gt;</span> <span class="tok-s">&quot;user=roger&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;Cookie&quot;</span> <span class="tok-o">-&gt;</span> <span class="tok-s">&quot;key=regor&quot;</span><span class="tok-o">)</span>
-    <span class="tok-o">.</span><span class="tok-n">put</span><span class="tok-o">(</span><span class="tok-nc">List</span><span class="tok-o">(</span><span class="tok-n">user</span><span class="tok-o">))</span></code></pre>
+<pre class="pygments highlight"><code data-lang="java"><span class="tok-n">CompletableFuture</span><span class="tok-o">&lt;</span><span class="tok-n">Response</span><span class="tok-o">&lt;</span><span class="tok-n">String</span><span class="tok-o">&gt;&gt;</span> <span class="tok-n">response</span> <span class="tok-o">=</span>
+  <span class="tok-n">client</span><span class="tok-o">.</span><span class="tok-na">rest</span><span class="tok-o">.</span><span class="tok-na">user</span><span class="tok-o">.</span><span class="tok-na">activate</span>
+    <span class="tok-o">.</span><span class="tok-na">addHeader</span><span class="tok-o">(</span><span class="tok-s">&quot;Cookie&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;user=roger&quot;</span><span class="tok-o">)</span>
+    <span class="tok-o">.</span><span class="tok-na">addHeader</span><span class="tok-o">(</span><span class="tok-s">&quot;Cookie&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;key=regor&quot;</span><span class="tok-o">)</span>
+    <span class="tok-o">.</span><span class="tok-na">put</span><span class="tok-o">(</span><span class="tok-n">userList</span><span class="tok-o">)</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>If you want to have a certain header on all calls under a certain parent resource, then you can add it on that parent resource and build
-on from there, see how to <a href="#scala-custom-header-reuse">add a custom header on all subresources</a>. Everywhere you reuse <code>resResource</code>, you&#8217;ll get the cookie header that was set on
+on from there, see how to <a href="#java-custom-header-reuse">add a custom header on all subresources</a>. Everywhere you reuse <code>resResource</code>, you&#8217;ll get the cookie header that was set on
 it.</p>
 </div>
-<div id="scala-custom-header-reuse" class="listingblock">
+<div id="java-custom-header-reuse" class="listingblock">
 <div class="title">add a custom header on all subresources</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="scala"><span class="tok-k">val</span> <span class="tok-n">restResource</span> <span class="tok-k">=</span> <span class="tok-n">client</span><span class="tok-o">.</span><span class="tok-n">rest</span><span class="tok-o">.</span><span class="tok-n">addHeaders</span><span class="tok-o">(</span><span class="tok-s">&quot;Cookie&quot;</span> <span class="tok-o">-&gt;</span> <span class="tok-s">&quot;user=roger&quot;</span><span class="tok-o">)</span>
+<pre class="pygments highlight"><code data-lang="java"><span class="tok-n">RestResource</span> <span class="tok-n">restResource</span> <span class="tok-o">=</span> <span class="tok-n">client</span><span class="tok-o">.</span><span class="tok-na">rest</span><span class="tok-o">.</span><span class="tok-na">addHeader</span><span class="tok-o">(</span><span class="tok-s">&quot;Cookie&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;user=roger&quot;</span><span class="tok-o">)</span>
 
-<span class="tok-k">val</span> <span class="tok-n">listBodyResponse</span> <span class="tok-k">=</span> <span class="tok-n">resResource</span><span class="tok-o">.</span><span class="tok-n">user</span><span class="tok-o">.</span><span class="tok-n">activate</span><span class="tok-o">.</span><span class="tok-n">put</span><span class="tok-o">(</span><span class="tok-nc">List</span><span class="tok-o">(</span><span class="tok-n">user</span><span class="tok-o">))</span></code></pre>
+<span class="tok-n">CompletableFuture</span><span class="tok-o">&lt;</span><span class="tok-n">Response</span><span class="tok-o">&lt;</span><span class="tok-n">String</span><span class="tok-o">&gt;&gt;</span> <span class="tok-n">response</span> <span class="tok-o">=</span>
+  <span class="tok-n">resResource</span><span class="tok-o">.</span><span class="tok-na">user</span><span class="tok-o">.</span><span class="tok-na">activate</span><span class="tok-o">.</span><span class="tok-na">put</span><span class="tok-o">(</span><span class="tok-n">userList</span><span class="tok-o">)</span></code></pre>
 </div>
 </div>
 </div>
@@ -725,71 +780,20 @@ to your service, depending on the content type that you have. The next example s
 </div>
 <div class="paragraph">
 <p>In this case, <span class="scramlfont">Scraml</span> forces you to choose which type you want to send before calling the <code>PUT</code> action. The following
-code sample shows how you <a href="#scala-userservice-double-content">choose a content type before executing the action</a>.</p>
+code sample shows how you <a href="#java-userservice-double-content">choose a content type before executing the action</a>.</p>
 </div>
-<div id="scala-userservice-double-content" class="listingblock">
+<div id="java-userservice-double-content" class="listingblock">
 <div class="title">choose a content type before executing the action</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="scala"><span class="tok-k">val</span> <span class="tok-n">eventualResponse</span><span class="tok-k">:</span> <span class="tok-kt">Future</span><span class="tok-o">[</span><span class="tok-kt">Response</span><span class="tok-o">[</span><span class="tok-kt">Link</span><span class="tok-o">]]</span> <span class="tok-k">=</span>
-  <span class="tok-n">client</span><span class="tok-o">.</span><span class="tok-n">rest</span><span class="tok-o">.</span><span class="tok-n">user</span>
-    <span class="tok-o">.</span><span class="tok-n">contentApplicationVndV10Json</span>
-    <span class="tok-o">.</span><span class="tok-n">put</span><span class="tok-o">(</span><span class="tok-n">user</span><span class="tok-o">)</span></code></pre>
+<pre class="pygments highlight"><code data-lang="java"><span class="tok-n">CompletableFuture</span><span class="tok-o">&lt;</span><span class="tok-n">Response</span><span class="tok-o">&lt;</span><span class="tok-n">Link</span><span class="tok-o">&gt;&gt;</span> <span class="tok-n">eventualResponse</span> <span class="tok-o">=</span>
+  <span class="tok-n">client</span><span class="tok-o">.</span><span class="tok-na">rest</span><span class="tok-o">.</span><span class="tok-na">user</span>
+    <span class="tok-o">.</span><span class="tok-na">contentApplicationVndV10Json</span>
+    <span class="tok-o">.</span><span class="tok-na">put</span><span class="tok-o">(</span><span class="tok-n">user</span><span class="tok-o">)</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>By chosing the <code>contentApplicationVndV10Json</code> header selection, you get access to a <code>.put(user)</code> action that takes a user of the type that
 matches the <code>application/vnd-v1.0+json</code> content type.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_the_astype_asjson_and_asstring_mappers">The asType, asJson and asString mappers</h3>
-<div class="paragraph">
-<p>The response of a request has the form <code>Future[Response[T]]</code>, where <code>T</code> is the type of the response body. The <code>Response</code> object also
-contains status information and the headers that were sent back with the server response. We are often only interested in the response
-body. That&#8217;s where the <code>asType</code> mapper can help you to map <code>Response[T]</code> to its body <code>T</code>. It is, however, extremely important to
-realize that when using <code>asType</code> all responses without a body (204 responses), 300-responses and all failure codes (status &gt; 400)
-are mapped to a failed future! So, <code>asType</code> really assumes that the user expects a 200-response as the only successful Future.</p>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-When <code>asType</code> is invoked, all non-200 responses will be mapped to a <strong>failed Future</strong>!
-</td>
-</tr>
-</table>
-</div>
-<div id="scala-asType" class="listingblock">
-<div class="title">asType mapper</div>
-<div class="content">
-<pre class="pygments highlight"><code data-lang="scala">  <span class="tok-k">val</span> <span class="tok-n">eventualUsersResponse</span><span class="tok-k">:</span> <span class="tok-kt">Future</span><span class="tok-o">[</span><span class="tok-kt">List</span><span class="tok-o">[</span><span class="tok-kt">User</span><span class="tok-o">]]</span> <span class="tok-k">=</span>
-    <span class="tok-n">userResource</span>
-      <span class="tok-o">.</span><span class="tok-n">get</span><span class="tok-o">(</span>
-        <span class="tok-n">age</span> <span class="tok-k">=</span> <span class="tok-nc">Some</span><span class="tok-o">(</span><span class="tok-mi">51</span><span class="tok-o">),</span>
-        <span class="tok-n">firstName</span> <span class="tok-k">=</span> <span class="tok-nc">Some</span><span class="tok-o">(</span><span class="tok-s">&quot;John&quot;</span><span class="tok-o">),</span>
-        <span class="tok-n">lastName</span> <span class="tok-k">=</span> <span class="tok-nc">None</span><span class="tok-o">,</span>
-        <span class="tok-n">organization</span> <span class="tok-k">=</span> <span class="tok-nc">List</span><span class="tok-o">(</span><span class="tok-s">&quot;ESA&quot;</span><span class="tok-o">,</span> <span class="tok-s">&quot;NASA&quot;</span><span class="tok-o">)</span>
-      <span class="tok-o">)</span>
-      <span class="tok-o">.</span><span class="tok-n">asType</span>  <i class="conum" data-value="1"></i><b>(1)</b>
-
-  <span class="tok-k">val</span> <span class="tok-n">users</span><span class="tok-k">:</span> <span class="tok-kt">List</span><span class="tok-o">[</span><span class="tok-kt">User</span><span class="tok-o">]</span> <span class="tok-k">=</span> <span class="tok-nc">Await</span><span class="tok-o">.</span><span class="tok-n">result</span><span class="tok-o">(</span><span class="tok-n">eventualUsersResponse</span><span class="tok-o">,</span> <span class="tok-mi">2</span> <span class="tok-n">seconds</span><span class="tok-o">)</span></code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>The <code>asType</code> keyword maps the response to its body on a successful response (status == 200), all other statuses (status != 200) will
-give a <strong>failed Future</strong> once <code>asType</code> is invoked!</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>When a response doesn&#8217;t have a typed body, we can call <code>.asString</code> to get the body as a string. Or when we know it should contain
-arbitrary JSON, we can call <code>.asJson</code> to get the JSON body.</p>
 </div>
 </div>
 <div class="sect2">
@@ -840,32 +844,61 @@ field that refers to the type symbol.</p>
 </div>
 <div class="paragraph">
 <p>During the code generation step, <span class="scramlfont">Scraml</span> creates a fully typed generic object that carries the two type references, see the
-<a href="#scala-generic-typing">generic typed object</a> example below.</p>
+<a href="#java-generic-typing">generic typed object</a> example below.</p>
 </div>
-<div id="scala-generic-typing" class="listingblock">
+<div id="java-generic-typing" class="listingblock">
 <div class="title">generic typed object</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="scala"><span class="tok-k">package</span> <span class="tok-nn">io.atomicbits.schema</span>
+<pre class="pygments highlight"><code data-lang="java"><span class="tok-kn">package</span> <span class="tok-n">io</span><span class="tok-o">.</span><span class="tok-na">atomicbits</span><span class="tok-o">.</span><span class="tok-na">schema</span><span class="tok-o">;</span>
 
-<span class="tok-k">import</span> <span class="tok-nn">play.api.libs.json._</span>
+<span class="tok-kn">import</span> <span class="tok-nn">java.util.List</span><span class="tok-o">;</span>
+<span class="tok-kn">import</span> <span class="tok-nn">com.fasterxml.jackson.annotation.*</span><span class="tok-o">;</span>
 
-<span class="tok-k">case</span> <span class="tok-k">class</span> <span class="tok-nc">PagedList</span><span class="tok-o">[</span><span class="tok-kt">T</span>, <span class="tok-kt">U</span><span class="tok-o">](</span><span class="tok-n">count</span><span class="tok-k">:</span> <span class="tok-kt">Long</span><span class="tok-o">,</span> <span class="tok-n">elements</span><span class="tok-k">:</span> <span class="tok-kt">List</span><span class="tok-o">[</span><span class="tok-kt">T</span><span class="tok-o">],</span> <span class="tok-n">owner</span><span class="tok-k">:</span> <span class="tok-kt">Option</span><span class="tok-o">[</span><span class="tok-kt">U</span><span class="tok-o">]</span> <span class="tok-k">=</span> <span class="tok-nc">None</span><span class="tok-o">)</span>
+<span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">PagedList</span><span class="tok-o">&lt;</span><span class="tok-n">T</span><span class="tok-o">,</span> <span class="tok-n">U</span><span class="tok-o">&gt;</span> <span class="tok-o">{</span>
 
-<span class="tok-k">object</span> <span class="tok-nc">PagedList</span> <span class="tok-o">{</span>
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;count&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">Long</span> <span class="tok-n">count</span><span class="tok-o">;</span>
 
-  <span class="tok-k">import</span> <span class="tok-nn">play.api.libs.functional.syntax._</span>
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;elements&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">List</span><span class="tok-o">&lt;</span><span class="tok-n">T</span><span class="tok-o">&gt;</span> <span class="tok-n">elements</span><span class="tok-o">;</span>
 
-  <span class="tok-k">implicit</span> <span class="tok-k">def</span> <span class="tok-n">jsonFormatter</span><span class="tok-o">[</span><span class="tok-kt">T:</span> <span class="tok-kt">Format</span>, <span class="tok-kt">U:</span> <span class="tok-kt">Format</span><span class="tok-o">]</span><span class="tok-k">:</span> <span class="tok-kt">Format</span><span class="tok-o">[</span><span class="tok-kt">PagedList</span><span class="tok-o">[</span><span class="tok-kt">T</span>, <span class="tok-kt">U</span><span class="tok-o">]]</span> <span class="tok-k">=</span>
-    <span class="tok-o">((</span><span class="tok-nc">__</span> <span class="tok-o">\</span> <span class="tok-s">&quot;count&quot;</span><span class="tok-o">).</span><span class="tok-n">format</span><span class="tok-o">[</span><span class="tok-kt">Long</span><span class="tok-o">]</span> <span class="tok-o">~</span>
-      <span class="tok-o">(</span><span class="tok-nc">__</span> <span class="tok-o">\</span> <span class="tok-s">&quot;elements&quot;</span><span class="tok-o">).</span><span class="tok-n">format</span><span class="tok-o">[</span><span class="tok-kt">List</span><span class="tok-o">[</span><span class="tok-kt">T</span><span class="tok-o">]]</span> <span class="tok-o">~</span>
-      <span class="tok-o">(</span><span class="tok-nc">__</span> <span class="tok-o">\</span> <span class="tok-s">&quot;owner&quot;</span><span class="tok-o">).</span><span class="tok-n">formatNullable</span><span class="tok-o">[</span><span class="tok-kt">U</span><span class="tok-o">])(</span><span class="tok-nc">PagedList</span><span class="tok-o">.</span><span class="tok-n">apply</span><span class="tok-o">,</span> <span class="tok-n">unlift</span><span class="tok-o">(</span><span class="tok-nc">PagedList</span><span class="tok-o">.</span><span class="tok-n">unapply</span><span class="tok-o">))</span>
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;owner&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">U</span> <span class="tok-n">owner</span><span class="tok-o">;</span>
+
+    <span class="tok-kd">public</span> <span class="tok-nf">PagedList</span><span class="tok-o">()</span> <span class="tok-o">{}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-nf">PagedList</span><span class="tok-o">(</span><span class="tok-n">Long</span> <span class="tok-n">count</span><span class="tok-o">,</span> <span class="tok-n">List</span><span class="tok-o">&lt;</span><span class="tok-n">T</span><span class="tok-o">&gt;</span> <span class="tok-n">elements</span><span class="tok-o">,</span> <span class="tok-n">U</span> <span class="tok-n">owner</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setCount</span><span class="tok-o">(</span><span class="tok-n">count</span><span class="tok-o">);</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setElements</span><span class="tok-o">(</span><span class="tok-n">elements</span><span class="tok-o">);</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setOwner</span><span class="tok-o">(</span><span class="tok-n">owner</span><span class="tok-o">);</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-n">Long</span> <span class="tok-nf">getCount</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">count</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setCount</span><span class="tok-o">(</span><span class="tok-n">Long</span> <span class="tok-n">count</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">count</span> <span class="tok-o">=</span> <span class="tok-n">count</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-n">List</span><span class="tok-o">&lt;</span><span class="tok-n">T</span><span class="tok-o">&gt;</span> <span class="tok-nf">getElements</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">elements</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setElements</span><span class="tok-o">(</span><span class="tok-n">List</span><span class="tok-o">&lt;</span><span class="tok-n">T</span><span class="tok-o">&gt;</span> <span class="tok-n">elements</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">elements</span> <span class="tok-o">=</span> <span class="tok-n">elements</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-n">U</span> <span class="tok-nf">getOwner</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">owner</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setOwner</span><span class="tok-o">(</span><span class="tok-n">U</span> <span class="tok-n">owner</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">owner</span> <span class="tok-o">=</span> <span class="tok-n">owner</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
 
 <span class="tok-o">}</span></code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Because of the type parameters, the Play formats for this case class have to be generated in a different way, which <span class="scramlfont">Scraml</span>
-delivers automatically.</p>
 </div>
 </div>
 <div class="sect2">
@@ -947,62 +980,136 @@ that points to an enumeration that contains only one element: the discriminator 
 attached to it by default, we need to inject a type discriminator field. The name of the field is <code>type</code> by default, but it can be changed
 by adding the <code>typeDiscriminator</code> string field at the top-level object.</p>
 </div>
-<div id="scala-class-hierarchy" class="listingblock">
-<div class="title">generated case class hierarchy with common parent trait</div>
+<div id="java-class-hierarchy-animal" class="listingblock">
+<div class="title">generated class hierarchy - Animal</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="scala"><span class="tok-k">package</span> <span class="tok-nn">io.atomicbits.schema</span>
+<pre class="pygments highlight"><code data-lang="java"><span class="tok-kn">package</span> <span class="tok-n">io</span><span class="tok-o">.</span><span class="tok-na">atomicbits</span><span class="tok-o">.</span><span class="tok-na">schema</span><span class="tok-o">;</span>
 
-<span class="tok-k">import</span> <span class="tok-nn">play.api.libs.json._</span>
-<span class="tok-k">import</span> <span class="tok-nn">io.atomicbits.scraml.dsl.json.TypedJson._</span>
+<span class="tok-kn">import</span> <span class="tok-nn">com.fasterxml.jackson.annotation.*</span><span class="tok-o">;</span>
 
-<span class="tok-k">sealed</span> <span class="tok-k">trait</span> <span class="tok-nc">Animal</span> <span class="tok-o">{</span>
+<span class="tok-nd">@JsonTypeInfo</span><span class="tok-o">(</span><span class="tok-n">use</span> <span class="tok-o">=</span> <span class="tok-n">JsonTypeInfo</span><span class="tok-o">.</span><span class="tok-na">Id</span><span class="tok-o">.</span><span class="tok-na">NAME</span><span class="tok-o">,</span> <span class="tok-n">include</span> <span class="tok-o">=</span> <span class="tok-n">JsonTypeInfo</span><span class="tok-o">.</span><span class="tok-na">As</span><span class="tok-o">.</span><span class="tok-na">PROPERTY</span><span class="tok-o">,</span> <span class="tok-n">property</span> <span class="tok-o">=</span> <span class="tok-s">&quot;_type&quot;</span><span class="tok-o">)</span>
+<span class="tok-nd">@JsonSubTypes</span><span class="tok-o">(</span>
+        <span class="tok-o">{</span>
+                <span class="tok-nd">@JsonSubTypes.Type</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-n">Cat</span><span class="tok-o">.</span><span class="tok-na">class</span><span class="tok-o">,</span> <span class="tok-n">name</span> <span class="tok-o">=</span> <span class="tok-s">&quot;Cat&quot;</span><span class="tok-o">),</span>
+                <span class="tok-nd">@JsonSubTypes.Type</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-n">Dog</span><span class="tok-o">.</span><span class="tok-na">class</span><span class="tok-o">,</span> <span class="tok-n">name</span> <span class="tok-o">=</span> <span class="tok-s">&quot;Dog&quot;</span><span class="tok-o">),</span>
+                <span class="tok-nd">@JsonSubTypes.Type</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-n">Fish</span><span class="tok-o">.</span><span class="tok-na">class</span><span class="tok-o">,</span> <span class="tok-n">name</span> <span class="tok-o">=</span> <span class="tok-s">&quot;Fish&quot;</span><span class="tok-o">)</span>
+        <span class="tok-o">})</span>
+<span class="tok-kd">public</span> <span class="tok-kd">abstract</span> <span class="tok-kd">class</span> <span class="tok-nc">Animal</span> <span class="tok-o">{</span>
 
-  <span class="tok-k">def</span> <span class="tok-n">gender</span><span class="tok-k">:</span> <span class="tok-kt">String</span>
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;gender&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">String</span> <span class="tok-n">gender</span><span class="tok-o">;</span>
 
-<span class="tok-o">}</span>
+    <span class="tok-kd">public</span> <span class="tok-nf">Animal</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+    <span class="tok-o">}</span>
 
-<span class="tok-k">object</span> <span class="tok-nc">Animal</span> <span class="tok-o">{</span>
+    <span class="tok-kd">public</span> <span class="tok-nf">Animal</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">gender</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setGender</span><span class="tok-o">(</span><span class="tok-n">gender</span><span class="tok-o">);</span>
+    <span class="tok-o">}</span>
 
-  <span class="tok-k">implicit</span> <span class="tok-k">val</span> <span class="tok-n">jsonFormat</span><span class="tok-k">:</span> <span class="tok-kt">Format</span><span class="tok-o">[</span><span class="tok-kt">Animal</span><span class="tok-o">]</span> <span class="tok-k">=</span>
-    <span class="tok-nc">TypeHintFormat</span><span class="tok-o">(</span>
-      <span class="tok-s">&quot;_type&quot;</span><span class="tok-o">,</span>
-      <span class="tok-nc">Cat</span><span class="tok-o">.</span><span class="tok-n">jsonFormatter</span><span class="tok-o">.</span><span class="tok-n">withTypeHint</span><span class="tok-o">(</span><span class="tok-s">&quot;Cat&quot;</span><span class="tok-o">),</span>
-      <span class="tok-nc">Dog</span><span class="tok-o">.</span><span class="tok-n">jsonFormatter</span><span class="tok-o">.</span><span class="tok-n">withTypeHint</span><span class="tok-o">(</span><span class="tok-s">&quot;Dog&quot;</span><span class="tok-o">),</span>
-      <span class="tok-nc">Fish</span><span class="tok-o">.</span><span class="tok-n">jsonFormatter</span><span class="tok-o">.</span><span class="tok-n">withTypeHint</span><span class="tok-o">(</span><span class="tok-s">&quot;Fish&quot;</span><span class="tok-o">)</span>
-    <span class="tok-o">)</span>
+    <span class="tok-kd">public</span> <span class="tok-n">String</span> <span class="tok-nf">getGender</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">gender</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
 
-<span class="tok-o">}</span>
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setGender</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">gender</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">gender</span> <span class="tok-o">=</span> <span class="tok-n">gender</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
 
-<span class="tok-k">case</span> <span class="tok-k">class</span> <span class="tok-nc">Cat</span><span class="tok-o">(</span><span class="tok-n">gender</span><span class="tok-k">:</span> <span class="tok-kt">String</span><span class="tok-o">,</span> <span class="tok-n">name</span><span class="tok-k">:</span> <span class="tok-kt">Option</span><span class="tok-o">[</span><span class="tok-kt">String</span><span class="tok-o">]</span> <span class="tok-k">=</span> <span class="tok-nc">None</span><span class="tok-o">)</span> <span class="tok-k">extends</span> <span class="tok-nc">Animal</span>
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div id="java-class-hierarchy-dog" class="listingblock">
+<div class="title">generated class hierarchy - Dog</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span class="tok-kn">package</span> <span class="tok-n">io</span><span class="tok-o">.</span><span class="tok-na">atomicbits</span><span class="tok-o">.</span><span class="tok-na">schema</span><span class="tok-o">;</span>
 
-<span class="tok-k">object</span> <span class="tok-nc">Cat</span> <span class="tok-o">{</span>
+<span class="tok-kn">import</span> <span class="tok-nn">com.fasterxml.jackson.annotation.*</span><span class="tok-o">;</span>
 
-  <span class="tok-k">implicit</span> <span class="tok-k">val</span> <span class="tok-n">jsonFormatter</span><span class="tok-k">:</span> <span class="tok-kt">Format</span><span class="tok-o">[</span><span class="tok-kt">Cat</span><span class="tok-o">]</span> <span class="tok-k">=</span> <span class="tok-nc">Json</span><span class="tok-o">.</span><span class="tok-n">format</span><span class="tok-o">[</span><span class="tok-kt">Cat</span><span class="tok-o">]</span>
+<span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">Dog</span> <span class="tok-kd">extends</span> <span class="tok-n">Animal</span> <span class="tok-o">{</span>
 
-<span class="tok-o">}</span>
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;canBark&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">Boolean</span> <span class="tok-n">canBark</span><span class="tok-o">;</span>
 
-<span class="tok-k">case</span> <span class="tok-k">class</span> <span class="tok-nc">Dog</span><span class="tok-o">(</span><span class="tok-n">gender</span><span class="tok-k">:</span> <span class="tok-kt">String</span><span class="tok-o">,</span> <span class="tok-n">canBark</span><span class="tok-k">:</span> <span class="tok-kt">Boolean</span><span class="tok-o">,</span> <span class="tok-n">name</span><span class="tok-k">:</span> <span class="tok-kt">Option</span><span class="tok-o">[</span><span class="tok-kt">String</span><span class="tok-o">]</span> <span class="tok-k">=</span> <span class="tok-nc">None</span><span class="tok-o">)</span> <span class="tok-k">extends</span> <span class="tok-nc">Animal</span>
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;name&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">String</span> <span class="tok-n">name</span><span class="tok-o">;</span>
 
-<span class="tok-k">object</span> <span class="tok-nc">Dog</span> <span class="tok-o">{</span>
+    <span class="tok-kd">public</span> <span class="tok-nf">Dog</span><span class="tok-o">()</span> <span class="tok-o">{}</span>
 
-  <span class="tok-k">implicit</span> <span class="tok-k">val</span> <span class="tok-n">jsonFormatter</span><span class="tok-k">:</span> <span class="tok-kt">Format</span><span class="tok-o">[</span><span class="tok-kt">Dog</span><span class="tok-o">]</span> <span class="tok-k">=</span> <span class="tok-nc">Json</span><span class="tok-o">.</span><span class="tok-n">format</span><span class="tok-o">[</span><span class="tok-kt">Dog</span><span class="tok-o">]</span>
+    <span class="tok-kd">public</span> <span class="tok-nf">Dog</span><span class="tok-o">(</span><span class="tok-n">Boolean</span> <span class="tok-n">canBark</span><span class="tok-o">,</span> <span class="tok-n">String</span> <span class="tok-n">gender</span><span class="tok-o">,</span> <span class="tok-n">String</span> <span class="tok-n">name</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setCanBark</span><span class="tok-o">(</span><span class="tok-n">canBark</span><span class="tok-o">);</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setGender</span><span class="tok-o">(</span><span class="tok-n">gender</span><span class="tok-o">);</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setName</span><span class="tok-o">(</span><span class="tok-n">name</span><span class="tok-o">);</span>
+    <span class="tok-o">}</span>
 
-<span class="tok-o">}</span>
+    <span class="tok-kd">public</span> <span class="tok-n">Boolean</span> <span class="tok-nf">getCanBark</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">canBark</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
 
-<span class="tok-k">case</span> <span class="tok-k">class</span> <span class="tok-nc">Fish</span><span class="tok-o">(</span><span class="tok-n">gender</span><span class="tok-k">:</span> <span class="tok-kt">String</span><span class="tok-o">)</span> <span class="tok-k">extends</span> <span class="tok-nc">Animal</span>
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setCanBark</span><span class="tok-o">(</span><span class="tok-n">Boolean</span> <span class="tok-n">canBark</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">canBark</span> <span class="tok-o">=</span> <span class="tok-n">canBark</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
 
-<span class="tok-k">object</span> <span class="tok-nc">Fish</span> <span class="tok-o">{</span>
 
-  <span class="tok-k">implicit</span> <span class="tok-k">val</span> <span class="tok-n">jsonFormatter</span><span class="tok-k">:</span> <span class="tok-kt">Format</span><span class="tok-o">[</span><span class="tok-kt">Fish</span><span class="tok-o">]</span> <span class="tok-k">=</span> <span class="tok-nc">Json</span><span class="tok-o">.</span><span class="tok-n">format</span><span class="tok-o">[</span><span class="tok-kt">Fish</span><span class="tok-o">]</span>
+    <span class="tok-kd">public</span> <span class="tok-n">String</span> <span class="tok-nf">getName</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">name</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setName</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">name</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">name</span> <span class="tok-o">=</span> <span class="tok-n">name</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div id="java-class-hierarchy-cat" class="listingblock">
+<div class="title">generated class hierarchy - Cat</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span class="tok-kn">package</span> <span class="tok-n">io</span><span class="tok-o">.</span><span class="tok-na">atomicbits</span><span class="tok-o">.</span><span class="tok-na">schema</span><span class="tok-o">;</span>
+
+<span class="tok-kn">import</span> <span class="tok-nn">com.fasterxml.jackson.annotation.*</span><span class="tok-o">;</span>
+
+<span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">Cat</span> <span class="tok-kd">extends</span> <span class="tok-n">Animal</span> <span class="tok-o">{</span>
+
+    <span class="tok-nd">@JsonProperty</span><span class="tok-o">(</span><span class="tok-n">value</span> <span class="tok-o">=</span> <span class="tok-s">&quot;name&quot;</span><span class="tok-o">)</span>
+    <span class="tok-kd">private</span> <span class="tok-n">String</span> <span class="tok-n">name</span><span class="tok-o">;</span>
+
+    <span class="tok-kd">public</span> <span class="tok-nf">Cat</span><span class="tok-o">()</span> <span class="tok-o">{}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-nf">Cat</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">gender</span><span class="tok-o">,</span> <span class="tok-n">String</span> <span class="tok-n">name</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setGender</span><span class="tok-o">(</span><span class="tok-n">gender</span><span class="tok-o">);</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setName</span><span class="tok-o">(</span><span class="tok-n">name</span><span class="tok-o">);</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-n">String</span> <span class="tok-nf">getName</span><span class="tok-o">()</span> <span class="tok-o">{</span>
+        <span class="tok-k">return</span> <span class="tok-n">name</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-kt">void</span> <span class="tok-nf">setName</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">name</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">name</span> <span class="tok-o">=</span> <span class="tok-n">name</span><span class="tok-o">;</span>
+    <span class="tok-o">}</span>
+
+<span class="tok-o">}</span></code></pre>
+</div>
+</div>
+<div id="java-class-hierarchy-fish" class="listingblock">
+<div class="title">generated class hierarchy - Fish</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="java"><span class="tok-kn">package</span> <span class="tok-n">io</span><span class="tok-o">.</span><span class="tok-na">atomicbits</span><span class="tok-o">.</span><span class="tok-na">schema</span><span class="tok-o">;</span>
+
+<span class="tok-kd">public</span> <span class="tok-kd">class</span> <span class="tok-nc">Fish</span> <span class="tok-kd">extends</span> <span class="tok-n">Animal</span> <span class="tok-o">{</span>
+
+    <span class="tok-kd">public</span> <span class="tok-nf">Fish</span><span class="tok-o">()</span> <span class="tok-o">{}</span>
+
+    <span class="tok-kd">public</span> <span class="tok-nf">Fish</span><span class="tok-o">(</span><span class="tok-n">String</span> <span class="tok-n">gender</span><span class="tok-o">)</span> <span class="tok-o">{</span>
+        <span class="tok-k">this</span><span class="tok-o">.</span><span class="tok-na">setGender</span><span class="tok-o">(</span><span class="tok-n">gender</span><span class="tok-o">);</span>
+    <span class="tok-o">}</span>
 
 <span class="tok-o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The above code sample shows the <a href="#scala-class-hierarchy">generated case class hierarchy with common parent trait</a>. The parent trait defines the common property <code>gender</code>, while the leaf classes
-harbor the specifics for each kind of animal. To handle the JSON formatting of this hierarchy in an elegant way, we introduce the helper
-class <code>TypedJson</code> to deal with the type field to discriminate between the kinds of animals during serialization and deserialization.
-Have a look at the test class <code>RamlModelGeneratorTest</code> in the GitHub project <a href="https://github.com/atomicbits/scraml-test-scala" class="bare">https://github.com/atomicbits/scraml-test-scala</a> to see
+<p>The above code samples show the class hierarchy as generated form the animal json-schema definition. The parent class, <code>Animal</code> contains
+the common property <code>gender</code>, while the leaf classes harbor the specifics for each kind of animal.
+Have a look at the test class <code>RamlModelGeneratorTest</code> in the GitHub project <a href="https://github.com/atomicbits/scraml-test-java" class="bare">https://github.com/atomicbits/scraml-test-java</a> to see
 class hierarchy serialization and the other examples used in this documentation in action.</p>
 </div>
 </div>
@@ -1011,7 +1118,7 @@ class hierarchy serialization and the other examples used in this documentation 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-11-08 10:46:51 CET
+Last updated 2015-11-08 20:08:42 CET
 </div>
 </div>
 </body>

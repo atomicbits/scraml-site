@@ -8,7 +8,7 @@
 We are currently on RAML version 0.8 and we highly focus on json-schema models to represent data transfer objects. We are upgrading to
 RAML version 1.0 and its own data representation format as soon as we can.
 
-== Quickstart Scala
+== Quickstart Java
 
 Will be added as soon as the first release of [scramlfont]#Scraml# is there (expected by the end of november 2015).
 
@@ -20,11 +20,11 @@ include::writing-raml.adoc[]
 
 == Invoking Scraml
 
-The effect of having written a RAML model becomes interesting when you start using [scramlfont]#Scraml# to generate Scala code that
+The effect of having written a RAML model becomes interesting when you start using [scramlfont]#Scraml# to generate Java code that
 brings you a typesafe and asynchronous Domain Specific Language (DSL) that will enforce you in a fluent manner to follow your RAML specs.
 
-The sample code that we use here is based on the Scala test project for [scramlfont]#Scraml#:
-https://github.com/atomicbits/scraml-test-scala. You can checkout the full codebase there and play with the RAML definition and the test
+The sample code that we use here is based on the Java test project for [scramlfont]#Scraml#:
+https://github.com/atomicbits/scraml-test-java. You can checkout the full codebase there and play with the RAML definition and the test
 classes that showcase the DSL.
 
 In the next sections, we first introduce the generation of case classes from json-schema followed by the integration of those typed
@@ -37,125 +37,183 @@ offers.
 include::cross-referencing-json-schema.adoc[]
 
 
-=== Generated case classes
+=== Generated POJOs
 
-The <<scala-user>> reflects the fields described by the corresponding json-schema. Notice that the types of the fields that were not
-required (such as homePage) are wrapped in the `Option` monad. The address class has a strange canonical name that is a result of the
-somewhat unconventional `id` that we gave in the nested json-schema example. All optional fields have a default value of `None`, which
-shortens the construction of those case classes when the values of those fields are empty. The <<scala-link>> is referred to by the User
+The <<java-user>> reflects the fields described by the corresponding json-schema. The address class has a strange canonical name that is
+a result of the somewhat unconventional `id` that we gave in the nested json-schema example. The <<java-link>> is referred to by the User
 object (the `homePage` field). Because both classes are in the same package, the import statement to the Link class in User is omitted.
 
-[[scala-user]]
-[source,scala]
-.User case class
+[[java-user]]
+[source,java]
+.User POJO
 ----
-package io.atomicbits.schema
+package io.atomicbits.schema;
 
-import play.api.libs.json._
+import com.fasterxml.jackson.annotation.*;
 
-case class User(age: Long,
-                lastName: String,
-                firstName: String,
-                id: String,
-                homePage: Option[Link] = None,
-                address: Option[UserDefinitionsAddress] = None)
+public class User {
 
-object User {
+    @JsonProperty(value = "address")
+    private UserDefinitionsAddress address;
 
-  implicit val jsonFormatter: Format[User] = Json.format[User]
+    @JsonProperty(value = "age")
+    private Long age;
+
+    @JsonProperty(value = "firstName")
+    private String firstName;
+
+    @JsonProperty(value = "homePage")
+    private Link homePage;
+
+    @JsonProperty(value = "id")
+    private String id;
+
+    @JsonProperty(value = "lastName")
+    private String lastName;
+
+    public User() {}
+
+    public User(UserDefinitionsAddress address, Long age, String firstName, Link homePage, String id, String lastName) {
+        this.setAddress(address);
+        this.setAge(age);
+        this.setFirstName(firstName);
+        this.setHomePage(homePage);
+        this.setId(id);
+        this.setLastName(lastName);
+    }
+
+    public UserDefinitionsAddress getAddress() {
+        return address;
+    }
+
+    public void setAddress(UserDefinitionsAddress address) {
+        this.address = address;
+    }
+
+    public Long getAge() {
+        return age;
+    }
+
+    public void setAge(Long age) {
+        this.age = age;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public Link getHomePage() {
+        return homePage;
+    }
+
+    public void setHomePage(Link homePage) {
+        this.homePage = homePage;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
 }
 ----
 
-JSON serialization is done with play-json 2.4, hence the dependency on `play.api.libs.json._` (together with ning our only external
-dependencies to use the DSL). The formatters are defined in the companion objects.
+JSON serialization is done with jackson, hence the dependency on jackson annotations, which is together with ning our only external
+dependency to use the DSL.
 
-[[scala-link]]
-[source,scala]
-.Link case class
+[[java-link]]
+[source,java]
+.Link POJO
 ----
-package io.atomicbits.schema
+package io.atomicbits.schema;
 
-import play.api.libs.json._
+import com.fasterxml.jackson.annotation.*;
 
-case class Link(href: String,
-                method: Method,
-                accept: Option[String] = None)
+public class Link {
 
-object Link {
+    @JsonProperty(value = "accept")
+    private String accept;
 
-  implicit val jsonFormatter: Format[Link] = Json.format[Link]
+    @JsonProperty(value = "href")
+    private String href;
+
+    @JsonProperty(value = "method")
+    private Method method;
+
+    public Link() {}
+
+    public Link(String accept, String href, Method method) {
+        this.setAccept(accept);
+        this.setHref(href);
+        this.setMethod(method);
+    }
+
+    public String getAccept() {
+        return accept;
+    }
+
+    public void setAccept(String accept) {
+        this.accept = accept;
+    }
+
+    public String getHref() {
+        return href;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
+    }
+
+    public Method getMethod() {
+        return method;
+    }
+
+    public void setMethod(Method method) {
+        this.method = method;
+    }
 
 }
 ----
 
 
-Enumerations like the <<scala-method>> are implemented as a sealed trait with a name field and case objects for each choice in its
-companion object. JSON serialization goes directly to the name of the choice as a string without wrapper object.
+Enumerations like the <<java-method>> are transformed into Java enums.
 
-[[scala-method]]
-[source,scala]
+[[java-method]]
+[source,java]
 .Method enumeration
 ----
-package io.atomicbits.schema
+package io.atomicbits.schema;
 
-import play.api.libs.json.{Format, Json, JsResult, JsValue, JsString}
+public enum Method {
 
-sealed trait Method {
-  def name: String
+    GET,
+    PUT,
+    POST,
+    DELETE,
+    HEAD,
+    CONNECT,
+    TRACE,
+    OPTIONS
+
 }
-
-object Method {
-
-  case object GET extends Method {
-    val name = "GET"
-  }
-
-  case object PUT extends Method {
-    val name = "PUT"
-  }
-
-  case object POST extends Method {
-    val name = "POST"
-  }
-
-  case object DELETE extends Method {
-    val name = "DELETE"
-  }
-
-  case object HEAD extends Method {
-    val name = "HEAD"
-  }
-
-  case object CONNECT extends Method {
-    val name = "CONNECT"
-  }
-
-  case object TRACE extends Method {
-    val name = "TRACE"
-  }
-
-  case object OPTIONS extends Method {
-    val name = "OPTIONS"
-  }
-
-  val byName = Map(
-    GET.name → GET, PUT.name → PUT, POST.name → POST, DELETE.name → DELETE, HEAD.name → HEAD, CONNECT.name → CONNECT, TRACE.name → TRACE, OPTIONS.name → OPTIONS
-  )
-
-  implicit val MethodFormat = new Format[Method] {
-
-    override def reads(json: JsValue): JsResult[Method] = {
-      json.validate[String].map(Method.byName(_))
-    }
-
-    override def writes(o: Method): JsValue = {
-      JsString(o.name)
-    }
-  }
-}
-
 ----
+
+
 
 === Scraml typesafe asynchronous DSL: the basics
 
@@ -172,7 +230,7 @@ schemas.
 Next, we have a `multipart/form-data` POST action on `/rest/user/upload` and a resource that takes URL-parameters: `/rest/user/{userid}`.
 The `userid` URL-parameter is defined as a string and [scramlfont]#Scraml# will enforce this. There is a form-POST action on
 this resource with a required and a non-required form field. The response will have a JSON format, but it is not defined which schema it
-follows. This will imply that we don't have type information in the DSL on that response. Finally, we have a DELETE action and a
+follows. This implies that we don't have type information in the DSL on that response. Finally, we have a DELETE action and a
 POST action that sends a User and receives a Link.
 
 
@@ -182,7 +240,7 @@ POST action that sends a User and receives a Link.
 ----
 #%RAML 0.8
 ---
-title: My api 
+title: My api
 version: v1
 
 schemas:
@@ -220,45 +278,40 @@ schemas:
               }
 ----
 
-Compiling the codebase using sbt, [scramlfont]#Scraml# will generate the DSL in the code generation step before actual compilation. This
+Compiling the codebase using maven, [scramlfont]#Scraml# will generate the DSL in the code generation step before actual compilation. This
 results in a client that provides access to the resources we described above. Let's assume the above RAML file sits in the folder
 `io/atomicbits/api/` under the resources folder and the filename is `user-api.raml`. The resulting DSL can be used to do the following.
 
 
-[[scala-client]]
-[source,scala]
+[[java-client]]
+[source,java]
 .client DSL code
 ----
-  import io.atomicbits.api.UserApi
+  import io.atomicbits.api.UserApi;
   ...
-  val client = new UserApi( <1>
-    host = "localhost",
-    port = 8281,
-    protocol = "http",
-    defaultHeaders = Map(),
-    prefix = None,
-    config = ClientConfig()
-  )
+  UserApi client = new UserApi("localhost", 8281, "http", null, new ClientConfig(), new HashMap<>()); <1>
 
-  val userResource = client.rest.user <2>
+  UserResource userResource = client.rest.user; <2>
 
-  val eventualUsersResponse: Future[Response[List[User]]] = <5>
+  CompletableFuture<Response<User>> eventualUser = <5>
     userResource
       .get( <3>
-        age = Some(51),
-        firstName = Some("John"),
-        lastName = None,
-        organization = List("ESA", "NASA") <4>
-      )
+        51L,
+        "John",
+        null,
+        Arrays.asList("ESA", "NASA") <4>
+      );
 
-  val usersResponse: Response[List[User]] = Await.result(eventualUsersResponse, 2 seconds)
-  val users: List[User] = usersResponse.body
+  Response<List<User>> usersResponse = eventualUser.get(10, TimeUnit.SECONDS);
+
+  List<User> users = usersResponse.getBody();
 ----
 <1> Client initialization takes several basic parameters directly and many more advanced options through the ClientConfig parameter.
 <2> Resources that you build with the DSL are immutable constructs with pure value semantics, so you can assign them to variables and reuse them many times, they will always have the same meaning.
 <3> `get(...)` executes the GET request on the resource, consuming several fully typed query parameters.
 <4> Remember the `repeat: true` statement in the json-schema of this resource? The DSL will provide a list to represent the repeated parameter.
-<5> The result is asynchronous (hence the `Future[]`) and it is wrapped inside a `Result[T]` object. The body is a `List[User]`, matching the array of user type that is defined in the schema for this resource. `Result[T]` also contains the response headers and status code.
+<5> The result is asynchronous (hence the `Future<>`) and it is wrapped inside a `Result<T>` object. The body is a `List<User>`, matching the array of user type that is defined in the schema for this resource. `Result<T>` also contains the response headers and status code.
+
 
 The `UserApi` class is the starting point for establishing client requests using the DSL. It takes various basic parameters that are used
 to establish a connection with a remote service. In addition to the basic parameters, many more detailed parameters can be passed by
@@ -266,11 +319,10 @@ configuring a `ClientConfig` object. It takes parameters such as `requestTimeout
 `connectionTTL`, `maxConnections`, `maxConnectionsPerHost`, `allowPoolingConnections` and several more. These parameters are passed to
 the underlying ning client that handles the actual requests. The rest path is constructed in the DSL by following the corresponding
 field paths on the DSL entries: `client.rest.user` corresponds to the resource on `http:\\localhost:8281\rest\user`. The `.get(...)`
-action executes the actual request with some additional query parameters that are passed to the `.get()` method. The query parameters in
-the RAML example above weren't required parameters (default is false). That's why we need to wrap the parameters as an `Option[T]` here.
+action executes the actual request with some additional query parameters that are passed to the `.get()` method.
 The `organization` query parameter has the `repeat: true` setting, which results in a `List[String]` parameter on the GET action.
 
-[[scala-request-get]]
+[[request-get]]
 .GET request with query parameters
 ----
 GET
@@ -278,7 +330,7 @@ http://localhost:8281/rest/user?age=51.0&firstName=John&organization=ESA&organiz
 headers:	Accept=application/json
 ----
 
-[[scala-response-get]]
+[[response-get]]
 .GET response
 ----
 headers:  "Transfer-Encoding=chunked"; "Server=Jetty(6.1.26)"
@@ -286,10 +338,10 @@ body:     [{"address": {"streetAddress": "Mulholland Drive", "city": "LA", "stat
 status:   200 "OK"
 ----
 
-In <<scala-request-get>>, we see what the actual request looks like that goes out. Mind the double organization query parameter to match
+In <<request-get>>, we see what the actual request looks like that goes out. Mind the double organization query parameter to match
 the repeated character for this parameter. Also notice that [scramlfont]#Scraml# automatically adds the accept header that was specified
 in the RAML model for this GET action. The same goes for the `Content-Type` header when a request body is present. The result of
-the <<scala-response-get>> shows that the result is a `200 "OK"` response whose body contains a list of user object in JSON format.
+the <<response-get>> shows that the result is a `200 "OK"` response whose body contains a list of user object in JSON format.
 
 Let's add some <<raml-userservice-more>> and see how [scramlfont]#Scraml# handles it.
 
@@ -343,51 +395,55 @@ and PUT. The POST action represents a form post that contains a string parameter
 type is not specified. The DELETE action has no specific configuration at all, and the PUT action sends a user object as JSON in the
 request and expects a link object as JSON in its response. Finally, there is also a `/rest/user/upload` resource on which a
 multipart form upload is defined. After running [scramlfont]#Scraml# in the source-generation step of sbt, we get a DSL that enables
-<<scala-client-more>>.
+<<java-client-more>>.
 
 
-[[scala-client-more]]
-[source,scala]
+[[java-client-more]]
+[source,java]
 .more client DSL functionality
 ----
-  val userFoobarResource = client.rest.user.userid("foobar") <1>
+  UseridResource userFoobarResource = client.rest.user.userid("foobar"); <1>
 
 
   // POST
-  val eventualPostResponse: Future[Response[String]] =
-    userFoobarResource
-      .post(text = "Hello Foobar", value = None) <2>
+  CompletableFuture<Response<String>> eventualPostResponse =
+    userFoobarResource.post("Hello Foobar", null); <2>
 
-  val postResponse: Response[String] = Await.result(eventualPostResponse, 2 seconds)  <3>
+  Response<String> postResponse = eventualPostResponse.get(10, TimeUnit.SECONDS); <3>
 
-  assertResult(200)(postResponse.status) <4>
-  assertResult("Some server response")(postResponse.body) <5>
+  assertEquals(200, postResponse.getStatus()); <4>
+  assertEquals("Post OK", postResponse.getBody()); <5>
 
 
   // DELETE
-  val eventualDeleteResponse: Future[Response[String]] = userFoobarResource.delete()
-  val deleteResponse = Await.result(eventualDeleteResponse, 2 seconds)
-  assertResult(200)(deleteResponse.status)
+  CompletableFuture<Response<String>> eventualDeleteResponse = userFoobarResource.delete();
+  Response<String> deleteResponse = eventualDeleteResponse.get(10, TimeUnit.SECONDS);
+  assertEquals(200, deleteResponse.getStatus());
 
 
   // PUT
-  val user = User(
-    homePage = Some(Link("http://foo.bar", Method.GET, None)),
-    address = Some(UserDefinitionsAddress("Mulholland Drive", "LA", "California")),
-    age = 21,
-    firstName = "John",
-    lastName = "Doe",
-    id = "1"
-  )
+  User user = new User(
+    new UserDefinitionsAddress("LA", "California", "Mulholland Drive"),
+    21L,
+    "Doe",
+    new Link(null, "http://foo.bar", Method.GET),
+    "1",
+    "John"
+  );
 
-  val eventualPutResponse: Future[Response[Link]] = userFoobarResource.put(user)
-  val putResponse = Await.result(eventualPutResponse, 2 seconds)
-  assertResult(Link("http://foo.bar", Method.GET, None))(putResponse.body)
+  CompletableFuture<Response<Link>> eventualPutResponse =
+    userFoobarResource.put(user);
+
+  Link link = eventualPutResponse.get(10, TimeUnit.SECONDS).getBody();
+  assertEquals("http://foo.bar", link.getHref());
 
 
   // multipart form POST
-  val multipartFormPostResponse: Future[Response[String]] =
-    client.rest.user.upload.post(List(StringPart(name = "test", value = "string part value"))) <6>
+  List<BodyPart> bodyParts =
+    Collections.singletonList(new StringPart("test", "string part value"));
+
+  CompletableFuture<Response<String>> multipartFormPostResponse =
+    client.rest.user.upload.post(bodyParts); <6>
 ----
 <1> We construct the resource we need using the DSL, filling in the path parameter `userid` as a string value.
 <2> We call the POST action on this resource sending the form fields `text` and `value` with it.
@@ -400,32 +456,35 @@ multipart form upload is defined. After running [scramlfont]#Scraml# in the sour
 === Adding custom headers
 
 [scramlfont]#Scraml# allows you to add one or more headers on each resource in the DSL. The following example illustrates how to
-<<scala-custom-headers>> before calling a PUT action.
+<<java-custom-headers>> before calling a PUT action.
 
-[[scala-custom-headers]]
-[source,scala]
+[[java-custom-headers]]
+[source,java]
 .add custom headers
 ----
-val listBodyResponse =
+CompletableFuture<Response<String>> response =
   client.rest.user.activate
-    .addHeaders("Cookie" -> "user=roger", "Cookie" -> "key=regor")
-    .put(List(user))
+    .addHeader("Cookie", "user=roger")
+    .addHeader("Cookie", "key=regor")
+    .put(userList)
 ----
 
 
 If you want to have a certain header on all calls under a certain parent resource, then you can add it on that parent resource and build
-on from there, see how to <<scala-custom-header-reuse>>. Everywhere you reuse `resResource`, you'll get the cookie header that was set on
+on from there, see how to <<java-custom-header-reuse>>. Everywhere you reuse `resResource`, you'll get the cookie header that was set on
 it.
 
 
-[[scala-custom-header-reuse]]
-[source,scala]
+[[java-custom-header-reuse]]
+[source,java]
 .add a custom header on all subresources
 ----
-val restResource = client.rest.addHeaders("Cookie" -> "user=roger")
+RestResource restResource = client.rest.addHeader("Cookie", "user=roger")
 
-val listBodyResponse = resResource.user.activate.put(List(user))
+CompletableFuture<Response<String>> response =
+  resResource.user.activate.put(userList)
 ----
+
 
 
 === Handling multiple request content types and response accept types
@@ -454,14 +513,14 @@ to your service, depending on the content type that you have. The next example s
 
 
 In this case, [scramlfont]#Scraml# forces you to choose which type you want to send before calling the `PUT` action. The following
-code sample shows how you <<scala-userservice-double-content>>.
+code sample shows how you <<java-userservice-double-content>>.
 
 
-[[scala-userservice-double-content]]
-[source,scala]
+[[java-userservice-double-content]]
+[source,java]
 .choose a content type before executing the action
 ----
-val eventualResponse: Future[Response[Link]] =
+CompletableFuture<Response<Link>> eventualResponse =
   client.rest.user
     .contentApplicationVndV10Json
     .put(user)
@@ -469,38 +528,6 @@ val eventualResponse: Future[Response[Link]] =
 
 By chosing the `contentApplicationVndV10Json` header selection, you get access to a `.put(user)` action that takes a user of the type that
 matches the `application/vnd-v1.0+json` content type.
-
-=== The asType, asJson and asString mappers
-The response of a request has the form `Future[Response[T]]`, where `T` is the type of the response body. The `Response` object also
-contains status information and the headers that were sent back with the server response. We are often only interested in the response
-body. That's where the `asType` mapper can help you to map `Response[T]` to its body `T`. It is, however, extremely important to
-realize that when using `asType` all responses without a body (204 responses), 300-responses and all failure codes (status > 400)
-are mapped to a failed future! So, `asType` really assumes that the user expects a 200-response as the only successful Future.
-
-IMPORTANT: When `asType` is invoked, all non-200 responses will be mapped to a *failed Future*!
-
-[[scala-asType]]
-[source,scala]
-.asType mapper
-----
-  val eventualUsersResponse: Future[List[User]] =
-    userResource
-      .get(
-        age = Some(51),
-        firstName = Some("John"),
-        lastName = None,
-        organization = List("ESA", "NASA")
-      )
-      .asType  // <1>
-
-  val users: List[User] = Await.result(eventualUsersResponse, 2 seconds)
-----
-<1> The `asType` keyword maps the response to its body on a successful response (status == 200), all other statuses (status != 200) will
-give a *failed Future* once `asType` is invoked!
-
-When a response doesn't have a typed body, we can call `.asString` to get the body as a string. Or when we know it should contain
-arbitrary JSON, we can call `.asJson` to get the JSON body.
-
 
 
 === Generic typing in json-schema
@@ -549,32 +576,63 @@ field that refers to the type symbol.
 ----
 
 During the code generation step, [scramlfont]#Scraml# creates a fully typed generic object that carries the two type references, see the
-<<scala-generic-typing>> example below.
+<<java-generic-typing>> example below.
 
-[[scala-generic-typing]]
-[source,scala]
+[[java-generic-typing]]
+[source,java]
 .generic typed object
 ----
-package io.atomicbits.schema
+package io.atomicbits.schema;
 
-import play.api.libs.json._
+import java.util.List;
+import com.fasterxml.jackson.annotation.*;
 
-case class PagedList[T, U](count: Long, elements: List[T], owner: Option[U] = None)
+public class PagedList<T, U> {
 
-object PagedList {
+    @JsonProperty(value = "count")
+    private Long count;
 
-  import play.api.libs.functional.syntax._
+    @JsonProperty(value = "elements")
+    private List<T> elements;
 
-  implicit def jsonFormatter[T: Format, U: Format]: Format[PagedList[T, U]] =
-    ((__ \ "count").format[Long] ~
-      (__ \ "elements").format[List[T]] ~
-      (__ \ "owner").formatNullable[U])(PagedList.apply, unlift(PagedList.unapply))
+    @JsonProperty(value = "owner")
+    private U owner;
+
+    public PagedList() {}
+
+    public PagedList(Long count, List<T> elements, U owner) {
+        this.setCount(count);
+        this.setElements(elements);
+        this.setOwner(owner);
+    }
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
+    }
+
+    public List<T> getElements() {
+        return elements;
+    }
+
+    public void setElements(List<T> elements) {
+        this.elements = elements;
+    }
+
+    public U getOwner() {
+        return owner;
+    }
+
+    public void setOwner(U owner) {
+        this.owner = owner;
+    }
 
 }
 ----
 
-Because of the type parameters, the Play formats for this case class have to be generated in a different way, which [scramlfont]#Scraml#
-delivers automatically.
 
 
 === Type hierarchies in json-schema
@@ -656,66 +714,142 @@ attached to it by default, we need to inject a type discriminator field. The nam
 by adding the `typeDiscriminator` string field at the top-level object.
 
 
-[[scala-class-hierarchy]]
-[source,scala]
-.generated case class hierarchy with common parent trait
+[[java-class-hierarchy-animal]]
+[source,java]
+.generated class hierarchy - Animal
 ----
-package io.atomicbits.schema
+package io.atomicbits.schema;
 
-import play.api.libs.json._
-import io.atomicbits.scraml.dsl.json.TypedJson._
+import com.fasterxml.jackson.annotation.*;
 
-sealed trait Animal {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "_type")
+@JsonSubTypes(
+        {
+                @JsonSubTypes.Type(value = Cat.class, name = "Cat"),
+                @JsonSubTypes.Type(value = Dog.class, name = "Dog"),
+                @JsonSubTypes.Type(value = Fish.class, name = "Fish")
+        })
+public abstract class Animal {
 
-  def gender: String
+    @JsonProperty(value = "gender")
+    private String gender;
 
-}
+    public Animal() {
+    }
 
-object Animal {
+    public Animal(String gender) {
+        this.setGender(gender);
+    }
 
-  implicit val jsonFormat: Format[Animal] =
-    TypeHintFormat(
-      "_type",
-      Cat.jsonFormatter.withTypeHint("Cat"),
-      Dog.jsonFormatter.withTypeHint("Dog"),
-      Fish.jsonFormatter.withTypeHint("Fish")
-    )
+    public String getGender() {
+        return gender;
+    }
 
-}
-
-case class Cat(gender: String, name: Option[String] = None) extends Animal
-
-object Cat {
-
-  implicit val jsonFormatter: Format[Cat] = Json.format[Cat]
-
-}
-
-case class Dog(gender: String, canBark: Boolean, name: Option[String] = None) extends Animal
-
-object Dog {
-
-  implicit val jsonFormatter: Format[Dog] = Json.format[Dog]
-
-}
-
-case class Fish(gender: String) extends Animal
-
-object Fish {
-
-  implicit val jsonFormatter: Format[Fish] = Json.format[Fish]
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 
 }
 ----
 
-The above code sample shows the <<scala-class-hierarchy>>. The parent trait defines the common property `gender`, while the leaf classes
-harbor the specifics for each kind of animal. To handle the JSON formatting of this hierarchy in an elegant way, we introduce the helper
-class `TypedJson` to deal with the type field to discriminate between the kinds of animals during serialization and deserialization.
-Have a look at the test class `RamlModelGeneratorTest` in the GitHub project https://github.com/atomicbits/scraml-test-scala to see
+
+
+[[java-class-hierarchy-dog]]
+[source,java]
+.generated class hierarchy - Dog
+----
+package io.atomicbits.schema;
+
+import com.fasterxml.jackson.annotation.*;
+
+public class Dog extends Animal {
+
+    @JsonProperty(value = "canBark")
+    private Boolean canBark;
+
+    @JsonProperty(value = "name")
+    private String name;
+
+    public Dog() {}
+
+    public Dog(Boolean canBark, String gender, String name) {
+        this.setCanBark(canBark);
+        this.setGender(gender);
+        this.setName(name);
+    }
+
+    public Boolean getCanBark() {
+        return canBark;
+    }
+
+    public void setCanBark(Boolean canBark) {
+        this.canBark = canBark;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+}
+----
+
+
+[[java-class-hierarchy-cat]]
+[source,java]
+.generated class hierarchy - Cat
+----
+package io.atomicbits.schema;
+
+import com.fasterxml.jackson.annotation.*;
+
+public class Cat extends Animal {
+
+    @JsonProperty(value = "name")
+    private String name;
+
+    public Cat() {}
+
+    public Cat(String gender, String name) {
+        this.setGender(gender);
+        this.setName(name);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+}
+----
+
+
+[[java-class-hierarchy-fish]]
+[source,java]
+.generated class hierarchy - Fish
+----
+package io.atomicbits.schema;
+
+public class Fish extends Animal {
+
+    public Fish() {}
+
+    public Fish(String gender) {
+        this.setGender(gender);
+    }
+
+}
+----
+
+
+The above code samples show the class hierarchy as generated form the animal json-schema definition. The parent class, `Animal` contains
+the common property `gender`, while the leaf classes harbor the specifics for each kind of animal.
+Have a look at the test class `RamlModelGeneratorTest` in the GitHub project https://github.com/atomicbits/scraml-test-java to see
 class hierarchy serialization and the other examples used in this documentation in action.
-
-
-
-
-
-
