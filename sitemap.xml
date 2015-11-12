@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Created using XmlSitemapGenerator.org - Free HTML, RSS and XML sitemap generator-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>http://scraml.io/</loc>
+        <lastmod>2015-11-12</lastmod>
+        <changefreq>Weekly</changefreq>
+    </url>
+    <url>
+        <loc>http://scraml.io/javadocumentation/</loc>
+        <lastmod>2015-11-12</lastmod>
+        <changefreq>Weekly</changefreq>
+    </url>
+    <url>
+        <loc>http://scraml.io/scaladocumentation/</loc>
+        <lastmod>2015-11-12</lastmod>
+        <changefreq>Weekly</changefreq>
+    </url>
+</urlset>
