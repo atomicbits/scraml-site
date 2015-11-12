@@ -10,8 +10,69 @@ RAML version 1.0 and its own data representation format as soon as we can.
 
 == Quickstart Java
 
-Will be added as soon as the first release of [scramlfont]#Scraml# is there (expected by the end of november 2015).
+Setting up [scramlfont]#Scraml# using the maven-plugin is super-easy if you add the following configuration to your `pom.xml` file:
 
+[[pom.xml]]
+[source,xml]
+.configure the scraml sbt-plugin and the dsl dependency in your maven pom.xml file
+----
+    <properties>
+        <scraml.version>0.4.0</scraml.version>
+    </properties>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>io.atomicbits</groupId>
+                <artifactId>scraml-maven-plugin</artifactId>
+                <version>${scraml.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-client-sources</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <ramlApi>/io/atomicbits/my-api.raml</ramlApi>
+                        </configuration>
+                        <goals>
+                            <goal>scraml</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>io.atomicbits</groupId>
+            <artifactId>scraml-dsl-java</artifactId>
+            <version>${scraml.version}</version>
+        </dependency>
+
+    </dependencies>
+----
+
+
+[scramlfont]#Scraml# provides a maven plugin that let's you configure your project's path to the main RAML file. By default, this
+path is expected to be relative to the project's `resources` folder. This relative path will also be the template for the package
+name of the client class for your API. To enable the plugin, <<pom.xml>>.
+
+The configuration points the `ramlApi` variable to the relative path to your main RAML file that sits in your `src/main/resources`
+folder. If you configure [scramlfont]#Scraml# in a submodule, then just configure this variable for that module by configuring the
+plugin for that module only. If for whatever reason the RAML files are not in the `resources` folder, then use the `resourceDirectory`
+variable to set another base directory, similar to how the `ramlApi` variable is set.
+
+Compile the project using maven to generate the [scramlfont]#Scraml# code. The generated code will appear in
+`target/generated-sources/scraml`, maven's default code generation destination.
+
+To see this in action, checkout the example project on github: https://github.com/atomicbits/scraml-test-java
+
+When you compile your project, you'll see a lot of dependencies being downloaded that are needed for the codegeneration step. Keep in
+mind that these packages are all compile-time dependencies. They will not end up in your packaged project! Only the `scraml-dsl-java`
+artifact will be added as a dependency and it only has `ning` and `jackson` as transitive dependencies.
 
 // == Writing RAML documentation
 

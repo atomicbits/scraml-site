@@ -10,7 +10,46 @@ RAML version 1.0 and its own data representation format as soon as we can.
 
 == Quickstart Scala
 
-Will be added as soon as the first release of [scramlfont]#Scraml# is there (expected by the end of november 2015).
+Setting up [scramlfont]#Scraml# using the sbt-plugin is super-easy if you follow these two steps:
+
+
+[[plugins.sbt]]
+[source,scala]
+.add the scraml sbt-plugin to project/plugins.sbt
+----
+addSbtPlugin("io.atomicbits"      % "scraml-sbt-plugin"   % "0.4.0")
+----
+
+
+[[build.sbt]]
+[source,scala]
+.configure the scraml sbt-plugin in build.sbt
+----
+scramlRamlApi in scraml in Compile := "io/atomicbits/my-api.raml"
+
+// The path "io/atomicbits/my-api.raml" is relative to your project's src/main/resources folder.
+----
+
+
+[scramlfont]#Scraml# provides an sbt plugin that let's you configure your project's path to the main RAML file. By default, this
+path is expected to be relative to the project's `resources` folder. This relative path will also be the template for the package
+name of the client class for your API. To enable the plugin, <<plugins.sbt>>. Be sure to put `plugins.sbt` into your `project` folder.
+
+Finally, <<build.sbt>> in your project. The configuration is usually just a one-liner that points the `scramlRamlApi` variable to
+the relative path to your main RAML file that sits in your `src/main/resources` folder. If you configure [scramlfont]#Scraml# in a
+submodule, then just configure this variable for that module by adding it in the module's `build.sbt` file. If for whatever reason
+the RAML files are not in the `resources` folder, then use the `scramlBaseDir` variable to set another base directory, similar to
+how the `scramlRamlApi` variable is set.
+
+Compile the project using sbt to generate the [scramlfont]#Scraml# code. Continuous compile also works (`~compile`). As soon as you
+edit and save a RAML file, compilation will rerun. The generated code will appear in `target/scala-2.xx/src_managed/main/`, sbt's default
+code generation destination.
+
+To see this in action, checkout the example project on github: https://github.com/atomicbits/scraml-test-scala
+
+When you compile your project, you'll see a lot of dependencies being downloaded that are needed for the codegeneration step. Keep in
+mind that these packages are all compile-time dependencies. They will not end up in your packaged project! Only the `scraml-dsl-scala`
+artifact will be added as a dependency and it only has `ning` and `play-json` as transitive dependencies.
 
 
 // == Writing RAML documentation

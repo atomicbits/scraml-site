@@ -46,7 +46,46 @@ RAML version 1.0 and its own data representation format as soon as we can.</p>
 <h2 id="_quickstart_scala">Quickstart Scala</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Will be added as soon as the first release of <span class="scramlfont">Scraml</span> is there (expected by the end of november 2015).</p>
+<p>Setting up <span class="scramlfont">Scraml</span> using the sbt-plugin is super-easy if you follow these two steps:</p>
+</div>
+<div id="plugins.sbt" class="listingblock">
+<div class="title">add the scraml sbt-plugin to project/plugins.sbt</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="scala"><span class="tok-n">addSbtPlugin</span><span class="tok-o">(</span><span class="tok-s">&quot;io.atomicbits&quot;</span>      <span class="tok-o">%</span> <span class="tok-s">&quot;scraml-sbt-plugin&quot;</span>   <span class="tok-o">%</span> <span class="tok-s">&quot;0.4.0&quot;</span><span class="tok-o">)</span></code></pre>
+</div>
+</div>
+<div id="build.sbt" class="listingblock">
+<div class="title">configure the scraml sbt-plugin in build.sbt</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="scala"><span class="tok-n">scramlRamlApi</span> <span class="tok-n">in</span> <span class="tok-n">scraml</span> <span class="tok-n">in</span> <span class="tok-nc">Compile</span> <span class="tok-o">:=</span> <span class="tok-s">&quot;io/atomicbits/my-api.raml&quot;</span>
+
+<span class="tok-c1">// The path &quot;io/atomicbits/my-api.raml&quot; is relative to your project&#39;s src/main/resources folder.</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="scramlfont">Scraml</span> provides an sbt plugin that let&#8217;s you configure your project&#8217;s path to the main RAML file. By default, this
+path is expected to be relative to the project&#8217;s <code>resources</code> folder. This relative path will also be the template for the package
+name of the client class for your API. To enable the plugin, <a href="#plugins.sbt">add the scraml sbt-plugin to project/plugins.sbt</a>. Be sure to put <code>plugins.sbt</code> into your <code>project</code> folder.</p>
+</div>
+<div class="paragraph">
+<p>Finally, <a href="#build.sbt">configure the scraml sbt-plugin in build.sbt</a> in your project. The configuration is usually just a one-liner that points the <code>scramlRamlApi</code> variable to
+the relative path to your main RAML file that sits in your <code>src/main/resources</code> folder. If you configure <span class="scramlfont">Scraml</span> in a
+submodule, then just configure this variable for that module by adding it in the module&#8217;s <code>build.sbt</code> file. If for whatever reason
+the RAML files are not in the <code>resources</code> folder, then use the <code>scramlBaseDir</code> variable to set another base directory, similar to
+how the <code>scramlRamlApi</code> variable is set.</p>
+</div>
+<div class="paragraph">
+<p>Compile the project using sbt to generate the <span class="scramlfont">Scraml</span> code. Continuous compile also works (<code>~compile</code>). As soon as you
+edit and save a RAML file, compilation will rerun. The generated code will appear in <code>target/scala-2.xx/src_managed/main/</code>, sbt&#8217;s default
+code generation destination.</p>
+</div>
+<div class="paragraph">
+<p>To see this in action, checkout the example project on github: <a href="https://github.com/atomicbits/scraml-test-scala" class="bare">https://github.com/atomicbits/scraml-test-scala</a></p>
+</div>
+<div class="paragraph">
+<p>When you compile your project, you&#8217;ll see a lot of dependencies being downloaded that are needed for the codegeneration step. Keep in
+mind that these packages are all compile-time dependencies. They will not end up in your packaged project! Only the <code>scraml-dsl-scala</code>
+artifact will be added as a dependency and it only has <code>ning</code> and <code>play-json</code> as transitive dependencies.</p>
 </div>
 </div>
 </div>
@@ -105,7 +144,7 @@ json-schema version that you use. According to the specs, it is a required keywo
 cross-referencing</strong> between json-schemas! Therefore, <span class="scramlfont">Scraml</span> requires you to specify one on each json-schema file! The
 format should be of the form <code><a href="http://atomicbits.io/api/user.json" class="bare">http://atomicbits.io/api/user.json</a></code> and may end with a <code>#</code>. If the schema refers to an object,
 the canonical name of the object will be deduced from its <code>id</code>. In this case <code>io.atomicbits.api.User</code> will be the canonical class name
-that will recur in the generated Scala case class representation of a user.</p>
+that will recur in the generated class representation of a user.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -1011,7 +1050,7 @@ class hierarchy serialization and the other examples used in this documentation 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-11-08 10:46:51 CET
+Last updated 2015-11-12 14:47:29 CET
 </div>
 </div>
 </body>

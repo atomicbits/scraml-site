@@ -45,7 +45,72 @@ RAML version 1.0 and its own data representation format as soon as we can.</p>
 <h2 id="_quickstart_java">Quickstart Java</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Will be added as soon as the first release of <span class="scramlfont">Scraml</span> is there (expected by the end of november 2015).</p>
+<p>Setting up <span class="scramlfont">Scraml</span> using the maven-plugin is super-easy if you add the following configuration to your <code>pom.xml</code> file:</p>
+</div>
+<div id="pom.xml" class="listingblock">
+<div class="title">configure the scraml sbt-plugin and the dsl dependency in your maven pom.xml file</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="xml">    <span class="tok-nt">&lt;properties&gt;</span>
+        <span class="tok-nt">&lt;scraml.version&gt;</span>0.4.0<span class="tok-nt">&lt;/scraml.version&gt;</span>
+    <span class="tok-nt">&lt;/properties&gt;</span>
+
+    <span class="tok-nt">&lt;build&gt;</span>
+        <span class="tok-nt">&lt;plugins&gt;</span>
+
+            <span class="tok-nt">&lt;plugin&gt;</span>
+                <span class="tok-nt">&lt;groupId&gt;</span>io.atomicbits<span class="tok-nt">&lt;/groupId&gt;</span>
+                <span class="tok-nt">&lt;artifactId&gt;</span>scraml-maven-plugin<span class="tok-nt">&lt;/artifactId&gt;</span>
+                <span class="tok-nt">&lt;version&gt;</span>${scraml.version}<span class="tok-nt">&lt;/version&gt;</span>
+                <span class="tok-nt">&lt;executions&gt;</span>
+                    <span class="tok-nt">&lt;execution&gt;</span>
+                        <span class="tok-nt">&lt;id&gt;</span>generate-client-sources<span class="tok-nt">&lt;/id&gt;</span>
+                        <span class="tok-nt">&lt;phase&gt;</span>generate-sources<span class="tok-nt">&lt;/phase&gt;</span>
+                        <span class="tok-nt">&lt;configuration&gt;</span>
+                            <span class="tok-nt">&lt;ramlApi&gt;</span>/io/atomicbits/my-api.raml<span class="tok-nt">&lt;/ramlApi&gt;</span>
+                        <span class="tok-nt">&lt;/configuration&gt;</span>
+                        <span class="tok-nt">&lt;goals&gt;</span>
+                            <span class="tok-nt">&lt;goal&gt;</span>scraml<span class="tok-nt">&lt;/goal&gt;</span>
+                        <span class="tok-nt">&lt;/goals&gt;</span>
+                    <span class="tok-nt">&lt;/execution&gt;</span>
+                <span class="tok-nt">&lt;/executions&gt;</span>
+            <span class="tok-nt">&lt;/plugin&gt;</span>
+
+        <span class="tok-nt">&lt;/plugins&gt;</span>
+    <span class="tok-nt">&lt;/build&gt;</span>
+
+    <span class="tok-nt">&lt;dependencies&gt;</span>
+
+        <span class="tok-nt">&lt;dependency&gt;</span>
+            <span class="tok-nt">&lt;groupId&gt;</span>io.atomicbits<span class="tok-nt">&lt;/groupId&gt;</span>
+            <span class="tok-nt">&lt;artifactId&gt;</span>scraml-dsl-java<span class="tok-nt">&lt;/artifactId&gt;</span>
+            <span class="tok-nt">&lt;version&gt;</span>${scraml.version}<span class="tok-nt">&lt;/version&gt;</span>
+        <span class="tok-nt">&lt;/dependency&gt;</span>
+
+    <span class="tok-nt">&lt;/dependencies&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="scramlfont">Scraml</span> provides a maven plugin that let&#8217;s you configure your project&#8217;s path to the main RAML file. By default, this
+path is expected to be relative to the project&#8217;s <code>resources</code> folder. This relative path will also be the template for the package
+name of the client class for your API. To enable the plugin, <a href="#pom.xml">configure the scraml sbt-plugin and the dsl dependency in your maven pom.xml file</a>.</p>
+</div>
+<div class="paragraph">
+<p>The configuration points the <code>ramlApi</code> variable to the relative path to your main RAML file that sits in your <code>src/main/resources</code>
+folder. If you configure <span class="scramlfont">Scraml</span> in a submodule, then just configure this variable for that module by configuring the
+plugin for that module only. If for whatever reason the RAML files are not in the <code>resources</code> folder, then use the <code>resourceDirectory</code>
+variable to set another base directory, similar to how the <code>ramlApi</code> variable is set.</p>
+</div>
+<div class="paragraph">
+<p>Compile the project using maven to generate the <span class="scramlfont">Scraml</span> code. The generated code will appear in
+<code>target/generated-sources/scraml</code>, maven&#8217;s default code generation destination.</p>
+</div>
+<div class="paragraph">
+<p>To see this in action, checkout the example project on github: <a href="https://github.com/atomicbits/scraml-test-java" class="bare">https://github.com/atomicbits/scraml-test-java</a></p>
+</div>
+<div class="paragraph">
+<p>When you compile your project, you&#8217;ll see a lot of dependencies being downloaded that are needed for the codegeneration step. Keep in
+mind that these packages are all compile-time dependencies. They will not end up in your packaged project! Only the <code>scraml-dsl-java</code>
+artifact will be added as a dependency and it only has <code>ning</code> and <code>jackson</code> as transitive dependencies.</p>
 </div>
 </div>
 </div>
@@ -104,7 +169,7 @@ json-schema version that you use. According to the specs, it is a required keywo
 cross-referencing</strong> between json-schemas! Therefore, <span class="scramlfont">Scraml</span> requires you to specify one on each json-schema file! The
 format should be of the form <code><a href="http://atomicbits.io/api/user.json" class="bare">http://atomicbits.io/api/user.json</a></code> and may end with a <code>#</code>. If the schema refers to an object,
 the canonical name of the object will be deduced from its <code>id</code>. In this case <code>io.atomicbits.api.User</code> will be the canonical class name
-that will recur in the generated Scala case class representation of a user.</p>
+that will recur in the generated class representation of a user.</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -1118,7 +1183,7 @@ class hierarchy serialization and the other examples used in this documentation 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-11-08 20:08:42 CET
+Last updated 2015-11-12 14:47:01 CET
 </div>
 </div>
 </body>
