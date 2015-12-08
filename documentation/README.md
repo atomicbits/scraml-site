@@ -3,7 +3,9 @@
 Generate the documentation with:  
 
 ```
-asciidoctor documentation.adoc
+cd documentation
+asciidoctor javadocumentation.adoc
+asciidoctor scaladocumentation.adoc
 ```
 
 Install asciidoctor and pygments:
