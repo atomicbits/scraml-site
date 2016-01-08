@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Test your REST APIs using scraml and create a closed loop between your RAML definition and your RESTful implementation">
+    <meta name="author" content="Peter Rigole">
+
+    <title>Test your REST APIs using scraml</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../css/agency.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body id="page-top" class="index">
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand page-scroll" href="../">Scraml</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="page-scroll" href="../">Back</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+
+<section>
+    <div class="container">
+        <div class="col-md-12">
+            <h2>Closed-loop API integration testing with scraml</h2>
+            <br><br>
+            <p class="large">
+                API-first service design makes more and more sense these days now that businesses tend to evolve towards
+                microservice environments. It makes sense mainly because the
+                focus with microservices is a lot on creating smart endpoints that should provide a long-term stable interaction with
+                possibly hundreds of other services in its surroundings. The API should be extremely well thought-off to express the
+                underlying domain problem that it solves, but the API should also exclusively evolve in a backward compatible manner.
+                API stability is therefore of utmost importance.
+                <!--as we do not want to deploy an enterprise service bus (ESB) to cope with-->
+                <!--API changes and never do we want to deal with domain logic at the communication level. Such design choices would be-->
+                <!--typical for ESBs but are also a clear anti-pattern for a microservice ecosystem-->
+                <!--[Martin Fowler on <a href="http://martinfowler.com/articles/microservices.html">Microservices</a>].-->
+            </p>
+            <br>
+            <p class="large">
+                Long-term API stability should be established with a <b>test-driven API design process</b> that forces a tight coupling
+                between a formal API documentation, the API integration tests and the API implementation. The coupling should be
+                that strong that changing anything in the API documentation that is not backward compatible with the existing
+                API implementation should break the API integration tests to warn the development team. Such a coupling can be
+                realized when API integration tests are written using scraml. Scraml provides a typesafe domain specific language (DSL)
+                that reflects the formal API documentation that is expressed in the restful API modeling language, or
+                <a href="http://raml.org">RAML</a>. Any change in the RAML definition will be reflected in the Java and Scala code
+                generated by scraml, and by extension in the API test code that is written using scraml. Incompatible changes
+                will simply result in compilation failures that break the code and alert the team.
+
+            </p>
+
+            <br><br><img width="400" src="../img/ClosedLoopIntegrationTests.png"><br><br>
+
+            <p class="large">
+                Scraml is in fact a client code generator that produces a Scala and Java DSL from a RAML model that provides a unique,
+                straightforward and typesafe programming model to interact with your REST services. It enables development teams
+                to easily write an entire API integration tests suite before having written a single line of service code.
+                As a DSL, the generated code exposes a fluent language that lets you construct your REST resources with their
+                actions, query and form parameters and their payloads. In Java, the payloads are represented by POJOs, whereas in
+                Scala case classes give you access to the request and response bodies. The client interaction is fully asynchronous
+                and the default implementation is supported by ning as the http communication layer. The code sample below illustrates
+                how natural it is to write a test scenario in Scala using the DSL generated with scraml with scalatest and FeatureSpec.
+            </p>
+
+            <br><br><img width="1000" src="../img/ScalaTest-API-TDD.png"><br><br>
+
+            <p class="large">
+                In the above code sample, the typesafe Scala code 'client.rest.user.get(...)', the query parameter types and the response
+                body type are generated by scraml and reflects the specification of the RAML model for the REST service that is tested.
+                By forcing the developer into following the specs represented by the RAML model, the written integration tests can only
+                execute RESTful requests that are allowed by those specs. If the web services can't be addressed using this generated
+                API, then the services are not conforming the API design expressed by the RAML model.
+                In Java, the generated Java code would be similar and equally typesafe.
+            </p>
+            <br>
+            <p class="large">
+                Using this process, API integration tests are locked in a closed-loop with the API documenation. As soon as
+                incompatible changes would occur in the API documentation, the DSL will pick up the changes during the project’s
+                codegeneration cycle and the compilation of the API tests will fail mercilessly. This alarms the team and calls
+                for immediate action. When a REST mismatch sneaks in due to a bug in the API implementation, the API tests will
+                fail as well, given that every endpoint is tested thoroughly. The resulting tight coupling between the API
+                documentation, API integration tests and API implementation makes us confident that we offer a reliable API to our
+                customers that matches its RAML documentation.
+            </p>
+
+        </div>
+    </div>
+</section>
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <span class="copyright">Copyright &copy; Atomic BITS bvba 2015</span>
+            </div>
+            <div class="col-md-4">
+                <ul class="list-inline social-buttons">
+                    <li><a href="https://twitter.com/atomic_bits"><i class="fa fa-twitter"></i></a>
+                    </li>
+                    <!--<li><a href="#"><i class="fa fa-facebook"></i></a>-->
+                    <!--</li>-->
+                    <!--<li><a href="#"><i class="fa fa-linkedin"></i></a>-->
+                    <!--</li>-->
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <ul class="list-inline quicklinks">
+                    <li>Scraml&trade;</li>
+                    <!--<li><a href="#">Privacy Policy</a>-->
+                    <!--</li>-->
+                    <!--<li><a href="#">Terms of Use</a>-->
+                    <!--</li>-->
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<!-- jQuery -->
+<script src="../js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+<script src="../js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="../js/jqBootstrapValidation.js"></script>
+<script src="../js/contact_me.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="../js/agency.js"></script>
+
+<!-- Google Analytics tracker for scraml.io. Paste this in each page that needs tracking. -->
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-69181366-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</body>
+
+</html>
+
