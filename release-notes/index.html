@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Scraml Scala documentation">
+    <meta name="description" content="Scraml Release Notes">
     <meta name="author" content="Peter Rigole">
 
     <title>Scraml - Scalable clients from RAML</title>
@@ -16,9 +16,6 @@
 
     <!-- Custom CSS -->
     <link href="../css/agency.css" rel="stylesheet">
-    <link href="../css/asciidoctor.css" rel="stylesheet">
-    <link href="../css/pygments-friendly.css" rel="stylesheet">
-    <link href="../css/scraml.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="../font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -56,12 +53,6 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a class="page-scroll" href="../javadocumentation">Java Documentation</a>
-                </li>
-                <li>
-                    <a class="page-scroll active" href="../scaladocumentation">Scala Documentation</a>
-                </li>
-                <li>
                     <a class="page-scroll" href="../">Back</a>
                 </li>
             </ul>
@@ -72,8 +63,44 @@
 </nav>
 
 
-<section id="documentation" class="container" style="padding: 75px 0">
-<!--The documentation is loaded here by javascript code below.-->
+<section>
+    <div class="container">
+        <div class="col-md-12">
+            <h3>Scraml Release Notes</h3>
+
+            <p>Scraml is still on its way to version 1.0 as feedback from users flows in and provides invaluable feedback to improve the tool. Scraml is thoroughly tested as a DSL for acceptance testing of real-live projects and it is now also being used as a runtime client in several production sytems. The internal interfaces may still change between point releases, so be sure to check this page when upgrading to a newer version.</p>
+            <br>
+            <br>
+
+            <h4>Version 0.4.8</h4>
+
+            <ul>
+                <li>Important bugfix in the Java DSL backing library on the addHeader() method.</li>
+                <li>No breaking changes in the generated DSL.</li>
+            </ul>
+
+            <p>Migration highlights: none.</p>
+            <br>
+
+            <h4>Version 0.4.7</h4>
+
+            <ul>
+                <li>Factory classes for backing client injection</li>
+                <li>Ning dependency is now set to 'provided', meaning it needs to be manually included in projects using Scraml.</li>
+                <li>No breaking changes in the generated DSL.</li>
+            </ul>
+
+            <p>Migration highlights: update your pom.xml (<a href="/javadocumentation#_quickstart_java">Java</a>) or build.sbt (<a href="/scaladocumentation#_quickstart_scala">Scala</a>) files to manually include the ning http-client dependency.</p>
+            <br>
+
+
+            <h4>Earlier versions</h4>
+
+            <p>Early releases experienced a fast evolution and had many breaking changes as testing the DSLs in acceptance testing frameworks of production systems provides us lots of feedback.</p>
+            <br>
+
+        </div>
+    </div>
 </section>
 
 
@@ -123,10 +150,6 @@
 
 <!-- Custom Theme JavaScript -->
 <script src="../js/agency.js"></script>
-
-<script>
-    $( "#documentation" ).load( "../documentation/scaladocumentation.html" );
-</script>
 
 <!-- Google Analytics tracker for scraml.io. Paste this in each page that needs tracking. -->
 <script>

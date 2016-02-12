@@ -51,13 +51,15 @@ RAML version 1.0 and its own data representation format as soon as we can.</p>
 <div id="plugins.sbt" class="listingblock">
 <div class="title">add the scraml sbt-plugin to project/plugins.sbt</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="scala"><span class="tok-n">addSbtPlugin</span><span class="tok-o">(</span><span class="tok-s">&quot;io.atomicbits&quot;</span>      <span class="tok-o">%</span> <span class="tok-s">&quot;scraml-sbt-plugin&quot;</span>   <span class="tok-o">%</span> <span class="tok-s">&quot;0.4.6&quot;</span><span class="tok-o">)</span></code></pre>
+<pre class="pygments highlight"><code data-lang="scala"><span class="tok-n">addSbtPlugin</span><span class="tok-o">(</span><span class="tok-s">&quot;io.atomicbits&quot;</span>      <span class="tok-o">%</span> <span class="tok-s">&quot;scraml-sbt-plugin&quot;</span>   <span class="tok-o">%</span> <span class="tok-s">&quot;0.4.8&quot;</span><span class="tok-o">)</span></code></pre>
 </div>
 </div>
 <div id="build.sbt" class="listingblock">
-<div class="title">configure the scraml sbt-plugin in build.sbt</div>
+<div class="title">configure the scraml sbt-plugin and the http client dependency in build.sbt</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="scala"><span class="tok-n">scramlRamlApi</span> <span class="tok-n">in</span> <span class="tok-n">scraml</span> <span class="tok-n">in</span> <span class="tok-nc">Compile</span> <span class="tok-o">:=</span> <span class="tok-s">&quot;io/atomicbits/my-api.raml&quot;</span>
+<pre class="pygments highlight"><code data-lang="scala"><span class="tok-n">libraryDependencies</span> <span class="tok-o">++=</span> <span class="tok-nc">Seq</span><span class="tok-o">(</span><span class="tok-s">&quot;com.ning&quot;</span> <span class="tok-o">%</span> <span class="tok-s">&quot;async-http-client&quot;</span> <span class="tok-o">%</span> <span class="tok-s">&quot;1.9.31&quot;</span><span class="tok-o">)</span>
+
+<span class="tok-n">scramlRamlApi</span> <span class="tok-n">in</span> <span class="tok-n">scraml</span> <span class="tok-n">in</span> <span class="tok-nc">Compile</span> <span class="tok-o">:=</span> <span class="tok-s">&quot;io/atomicbits/my-api.raml&quot;</span>
 
 <span class="tok-c1">// The path &quot;io/atomicbits/my-api.raml&quot; is relative to your project&#39;s src/main/resources folder.</span></code></pre>
 </div>
@@ -68,11 +70,16 @@ path is expected to be relative to the project&#8217;s <code>resources</code> fo
 name of the client class for your API. To enable the plugin, <a href="#plugins.sbt">add the scraml sbt-plugin to project/plugins.sbt</a>. Be sure to put <code>plugins.sbt</code> into your <code>project</code> folder.</p>
 </div>
 <div class="paragraph">
-<p>Finally, <a href="#build.sbt">configure the scraml sbt-plugin in build.sbt</a> in your project. The configuration is usually just a one-liner that points the <code>scramlRamlApi</code> variable to
-the relative path to your main RAML file that sits in your <code>src/main/resources</code> folder. If you configure <span class="scramlfont">Scraml</span> in a
-submodule, then just configure this variable for that module by adding it in the module&#8217;s <code>build.sbt</code> file. If for whatever reason
-the RAML files are not in the <code>resources</code> folder, then use the <code>scramlBaseDir</code> variable to set another base directory, similar to
-how the <code>scramlRamlApi</code> variable is set.</p>
+<p>Finally, <a href="#build.sbt">configure the scraml sbt-plugin and the http client dependency in build.sbt</a> in your project. The configuration of <span class="scramlfont">Scraml</span> is usually just a one-liner that points the
+<code>scramlRamlApi</code> variable to the relative path to your main RAML file that sits in your <code>src/main/resources</code> folder. If you
+configure <span class="scramlfont">Scraml</span> in a submodule, then just configure this variable for that module by adding it in the module&#8217;s
+<code>build.sbt</code> file. If for whatever reason the RAML files are not in the <code>resources</code> folder, then use the <code>scramlBaseDir</code> variable
+to set another base directory, similar to how the <code>scramlRamlApi</code> variable is set.</p>
+</div>
+<div class="paragraph">
+<p>Since version 0.4.7, the ning http-client dependency is set as 'provided', meaning that projects using <span class="scramlfont">Scraml</span> need to
+include the ning library themselves. The main reason is that de backing http-client became free of choice and a factory class can
+load other backing clients if you want.</p>
 </div>
 <div class="paragraph">
 <p>Compile the project using sbt to generate the <span class="scramlfont">Scraml</span> code. Continuous compile also works (<code>~compile</code>). As soon as you
@@ -1050,7 +1057,7 @@ class hierarchy serialization and the other examples used in this documentation 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-01-08 13:01:23 CET
+Last updated 2016-02-12 14:56:58 CET
 </div>
 </div>
 </body>
