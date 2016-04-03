@@ -68,8 +68,27 @@
         <div class="col-md-12">
             <h3>Scraml Release Notes</h3>
 
-            <p>Scraml is still on its way to version 1.0 as feedback from users flows in and provides invaluable feedback to improve the tool. Scraml is thoroughly tested as a DSL for acceptance testing of real-live projects and it is now also being used as a runtime client in several production sytems. The internal interfaces may still change between point releases, so be sure to check this page when upgrading to a newer version.</p>
+            <p>Scraml is still on its way to version 1.0 as feedback from users flows in and provides invaluable feedback to improve
+                the tool. Scraml is thoroughly tested as a DSL for acceptance testing of real-live projects and it is now also being
+                used as a runtime client in several production sytems. The internal interfaces may still change between point releases,
+                so be sure to check this page when upgrading to a newer version. Version 1.0 will be released when fully tested
+                RAML 1.0 support is ready.</p>
             <br>
+            <br>
+
+            <h4>Version 0.4.12</h4>
+
+            <ul>
+                <li>Improvement: all response bodies in the 200 status-range can now have typed bodies, given there is only
+                    one possible response type for that method. Multi-status typed responses is still on the backlog.
+                </li>
+                <li>
+                    Bugfix: error response statuses on requests with typed responses are now handled properly.
+                </li>
+            </ul>
+
+            <p>Migration highlights: none, but please upgrade the ning dependency to 1.9.36, it has some bugfixes in its connection
+                pool.</p>
             <br>
 
             <h4>Version 0.4.11</h4>
@@ -118,13 +137,15 @@
                 <li>No breaking changes in the generated DSL.</li>
             </ul>
 
-            <p>Migration highlights: update your pom.xml (<a href="/javadocumentation#_quickstart_java">Java</a>) or build.sbt (<a href="/scaladocumentation#_quickstart_scala">Scala</a>) files to manually include the ning http-client dependency.</p>
+            <p>Migration highlights: update your pom.xml (<a href="/javadocumentation#_quickstart_java">Java</a>) or build.sbt (<a
+                    href="/scaladocumentation#_quickstart_scala">Scala</a>) files to manually include the ning http-client dependency.</p>
             <br>
 
 
             <h4>Earlier versions</h4>
 
-            <p>Early releases experienced a fast evolution and had many breaking changes as testing the DSLs in acceptance testing frameworks of production systems provided us lots of feedback.</p>
+            <p>Early releases experienced a fast evolution and had many breaking changes as testing the DSLs in acceptance testing
+                frameworks of production systems provided us lots of feedback.</p>
             <br>
 
         </div>

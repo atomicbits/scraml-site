@@ -55,7 +55,7 @@ Setting up [scramlfont]#Scraml# using the maven-plugin is super-easy if you add 
         <dependency>
             <groupId>com.ning</groupId>
             <artifactId>async-http-client</artifactId>
-            <version>1.9.31</version>
+            <version>1.9.36</version>
         </dependency>
 
     </dependencies>
