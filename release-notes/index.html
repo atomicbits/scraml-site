@@ -76,6 +76,29 @@
             <br>
             <br>
 
+            <h4>Version 0.4.13</h4>
+
+            <ul>
+                <li>
+                    The SBT plugin has been extended to support multi-project builds that generate code in multiple submodules
+                    simultaneously. This enables people to build a Scala and Java client in the same project, or any number of
+                    scraml clients (one per submodule) in parallel. Drop us an email if you're interested in an example for such
+                    an SBT project setup. The maven plugin remains unchanged for now.
+                </li>
+                <li>
+                    The SBT plugin doesn't automatically inject the scraml-dsl-scala dependency any longer. This feature was very cool
+                    and handy, but it isn't possible to tune the dependency injection so that it only injects that dependency in certain
+                    submodules and it also isn't possible to choose which dependency to inject based on the language set (e.g. injecting
+                    scraml-dsl-java when Java is set as the client source language). Now you have to set the library dependency yourself,
+                    but you can use the scramlVersion.value variable in your built.sbt definition so that the scraml version is
+                    automatically copied from the scraml plugin's version.
+                </li>
+            </ul>
+
+            <p>Migration highlights: You now have to set the DSL library dependency for the scraml client manually in Scala projects.
+             See the <a href="../scaladocumentation#_quickstart_scala">Scala quickstart</a></p>.
+
+
             <h4>Version 0.4.12</h4>
 
             <ul>
