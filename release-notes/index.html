@@ -76,6 +76,28 @@
             <br>
             <br>
 
+            <h4>Version 0.4.14</h4>
+
+            <ul>
+                <li>
+                    The client configuration now has the option to set a default request charset. If this option is not set manually,
+                    it defaults to the Java VM's default charset. This request charset will automatically be added to all outgoing
+                    requests that contain a string value and where the RAML specs didn't specify a charset parameter with the
+                    media type. For example when the user specifies the mediatype 'application/json' (content-type) for a request, then
+                    scraml will add the default charset. If the user specifies 'application/json;charset=utf-8', then the specified
+                    charset will be sent.
+                </li>
+                <li>
+                    Scraml will no parse the incoming charset value of the content-type header and use that charset to interpret the
+                    string value of that response. If no charset value is present, then the default incoming charset value (which was
+                    already present as a clientconfig option) will be used. The default value of the incoming charset parameter is
+                    the JVM's default charset.
+                </li>
+            </ul>
+
+            <p>Migration highlights: none.</p>
+
+
             <h4>Version 0.4.13</h4>
 
             <ul>
