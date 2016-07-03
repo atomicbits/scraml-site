@@ -51,7 +51,7 @@ RAML version 1.0 and its own data representation format as soon as we can.</p>
 <div id="plugins.sbt" class="listingblock">
 <div class="title">add the scraml sbt-plugin to project/plugins.sbt</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="scala"><span class="tok-n">addSbtPlugin</span><span class="tok-o">(</span><span class="tok-s">&quot;io.atomicbits&quot;</span>      <span class="tok-o">%</span> <span class="tok-s">&quot;scraml-sbt-plugin&quot;</span>   <span class="tok-o">%</span> <span class="tok-s">&quot;0.4.14&quot;</span><span class="tok-o">)</span></code></pre>
+<pre class="pygments highlight"><code data-lang="scala"><span class="tok-n">addSbtPlugin</span><span class="tok-o">(</span><span class="tok-s">&quot;io.atomicbits&quot;</span>      <span class="tok-o">%</span> <span class="tok-s">&quot;scraml-sbt-plugin&quot;</span>   <span class="tok-o">%</span> <span class="tok-s">&quot;0.4.15&quot;</span><span class="tok-o">)</span></code></pre>
 </div>
 </div>
 <div id="build.sbt" class="listingblock">
@@ -96,6 +96,35 @@ code generation destination.</p>
 <p>When you compile your project, you&#8217;ll see a lot of dependencies being downloaded that are needed for the codegeneration step. Keep in
 mind that these packages are all compile-time dependencies. They will not end up in your packaged project! Only the <code>scraml-dsl-scala</code>
 artifact will be added as a dependency and it only has <code>ning</code> and <code>play-json</code> as transitive dependencies.</p>
+</div>
+<div id="license.key" class="listingblock">
+<div class="title">configure a license key for activating the commercial scraml license in build.sbt</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="scala"><span class="tok-n">scramlLicenseKey</span> <span class="tok-n">in</span> <span class="tok-n">scraml</span> <span class="tok-n">in</span> <span class="tok-nc">Compile</span> <span class="tok-o">:=</span>
+  <span class="tok-s">&quot;&quot;&quot;</span>
+<span class="tok-s">    |U1Q7Q1ZQWnZMbHZSakQ7TGVwN0JSYkJXT2I7aW8uYXRvbWljYml0czsyMDE2LTA3LTAxOzM2NiFj</span>
+<span class="tok-s">    |VzlubUlqM2t4a1o2aUZFUFhDQm5nb01pd005bXVrb0k3MVczUnI2cmxaYjc3UC92OWlRUDFXeHBD</span>
+<span class="tok-s">    |Mk9Gd2hQcHBUVXkwYVBQZFhRCnJ6Y3VialdQv3d1c3gxVHVaOTAxNEVKbmI4cm9vdk1FakVqNlZw</span>
+<span class="tok-s">    |UG1mLzVyaHdTUXg5bWRtOWxtTDdUVnJoWTM1MEZaNVNJVWxGcG4Kb201cWVkdGp5cEs5dHRhajd3</span>
+<span class="tok-s">    |V3FEby9jN2FJOEtNZk9lME5wWjhidDBzUFFoZkdvV2VDMEZCWU9pTU1BdkZPWlNuWTZDNk1UNmhM</span>
+<span class="tok-s">    |WQo0eEoxVWFrTkNaaFNOeHhqRUQyNk44SHBFcFlybjlKWWRBa1piME5mVm9hczM0bHQ4WmN1OWJE</span>
+<span class="tok-s">    |bFExK3FmaDlmazlpbm5SdjVRVkhrCnEyMFJCZ3NKbHlubnFlZHdJYm5oNTk3V1hFTE4yVzNyTC9l</span>
+<span class="tok-s">    |Mjl3PT0=</span>
+<span class="tok-s">  &quot;&quot;&quot;</span><span class="tok-o">.</span><span class="tok-n">stripMargin</span>
+
+<span class="tok-n">scramlClassHeader</span> <span class="tok-n">in</span> <span class="tok-n">scraml</span> <span class="tok-n">in</span> <span class="tok-nc">Compile</span> <span class="tok-o">:=</span>
+  <span class="tok-s">&quot;&quot;&quot;</span>
+<span class="tok-s">    |All rights reserved.</span>
+<span class="tok-s">    |This is a custom license header.</span>
+<span class="tok-s">  &quot;&quot;&quot;</span><span class="tok-o">.</span><span class="tok-n">stripMargin</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In order to use your own custom license on the generated code, you can <a href="#license.key">configure a license key for activating the commercial scraml license in build.sbt</a>. As soon as a valid license is configured
+using the <code>scramlLicenseKey</code> variable, a custom header will be put above each generated code file. The new header has to be assigned to
+the <code>scramlClassHeader</code> sbt variable. From that point on, the default AGPL license doesn&#8217;t apply any longer on the client APIs you
+generate and your own license applies instead. Just ignore the <code>scramlLicenseKey</code> and <code>scramlClassHeader</code> variables if you want to use
+the free open source code generator.</p>
 </div>
 </div>
 </div>
@@ -1060,7 +1089,7 @@ class hierarchy serialization and the other examples used in this documentation 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-04-28 10:14:58 CEST
+Last updated 2016-07-03 10:26:15 CEST
 </div>
 </div>
 </body>
