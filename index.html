@@ -174,6 +174,14 @@
                 <br>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="section-subheading">Scraml release notes</h2>
+                <h3 class="section-subheading text-muted">Find out about the <a href="/release-notes">Scraml release notes here</a>.</h3>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h2 class="section-subheading">Main features list</h2>
@@ -217,19 +225,47 @@
                         </tr>
                         <tr>
                             <td>RAML 1.0 support</td>
-                            <td>Expected end 2016</td>
+                            <td>Ongoing in releases 0.5.x to 1.0, see RAML 1.0 compatibility list</td>
                         </tr>
                         <tr>
                             <td>Asynchronous streaming support</td>
-                            <td>Expected early 2017</td>
+                            <td>Expected in 2017</td>
                         </tr>
                         <tr>
                             <td>Gradle support</td>
-                            <td>Expected early 2017</td>
+                            <td>Expected in 2017</td>
+                        </tr>
+                        <tr>
+                            <td>Command line interface</td>
+                            <td>Expected in 2017</td>
+                        </tr>
+                        <tr>
+                            <td>Java client generation</td>
+                            <td><i class="fa fa-check fa-fw"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Scala client generation</td>
+                            <td><i class="fa fa-check fa-fw"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Adroid (Java) client generation</td>
+                            <td>Expected in 2017</td>
+                        </tr>
+                        <tr>
+                            <td>Python client generation</td>
+                            <td>Expected in 2017</td>
+                        </tr>
+                        <tr>
+                            <td>.NET (C#) client generation</td>
+                            <td>Expected in 2017</td>
+                        </tr>
+                        <tr>
+                            <td>OS X and iOS (Swift) client generation</td>
+                            <td>Expected in 2017</td>
                         </tr>
                         <tr>
                             <td>Scraml-Mock: a DSL-configurable server mock (useful for integration testing)</td>
-                            <td>Planned for end 2016</td>
+                            <td>Priority will be based upon user requests</td>
                         </tr>
                         </tbody>
                     </table>
@@ -237,11 +273,115 @@
 
             </div>
         </div>
+
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h3 class="section-subheading text-muted">Find out about the <a href="/release-notes">Scraml release notes</a>.</h3>
+                <h2 class="section-subheading">RAML 1.0 compatibility</h2>
+
+                <div class="table-responsive">
+                    <table class="table table-striped text-left">
+                        <thead>
+                        <tr>
+                            <th>RAML 1.0 Feature</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Basic RAML 1.0 types (without multiple inheritance or union types)</td>
+                            <td><i class="fa fa-check fa-fw"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Json-schema types (backward combatible with RAML 0.8)</td>
+                            <td><i class="fa fa-check fa-fw"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Union types and multiple inheritance</td>
+                            <td>Ongoing (a big one)</td>
+                        </tr>
+                        <tr>
+                            <td>Additional object properties</td>
+                            <td>Ongoing</td>
+                        </tr>
+                        <tr>
+                            <td>Parameterized Traits</td>
+                            <td>Ongoing</td>
+                        </tr>
+                        <tr>
+                            <td>Parameterized Resource Types</td>
+                            <td>Ongoing</td>
+                        </tr>
+                        <tr>
+                            <td>Default mediaType</td>
+                            <td>Partial (now only for single media type)</td>
+                        </tr>
+                        <tr>
+                            <td>baseUriParameters</td>
+                            <td>Ongoing</td>
+                        </tr>
+                        <tr>
+                            <td>Date support</td>
+                            <td>Ongoing</td>
+                        </tr>
+                        <tr>
+                            <td>File type support</td>
+                            <td>Ongoing</td>
+                        </tr>
+                        <tr>
+                            <td>Multidimensional arrays</td>
+                            <td>Ongoing</td>
+                        </tr>
+                        <tr>
+                            <td>Question mark for optional fields and parameters</td>
+                            <td>Ongoing</td>
+                        </tr>
+                        <tr>
+                            <td>queryString? support (as opposed to queryParameters, which are supported)</td>
+                            <td>Ongoing</td>
+                        </tr>
+                        <tr>
+                            <td>JSON serialized string as URI parameter for complex types</td>
+                            <td>Not started</td>
+                        </tr>
+                        <tr>
+                            <td>Partial URI parameter templates</td>
+                            <td>Not started</td>
+                        </tr>
+                        <tr>
+                            <td>Facets and custom facets</td>
+                            <td>Not started</td>
+                        </tr>
+                        <tr>
+                            <td>Security Schemes</td>
+                            <td>Not started</td>
+                        </tr>
+                        <tr>
+                            <td>Default security definition</td>
+                            <td>Not started</td>
+                        </tr>
+                        <tr>
+                            <td>Libraries</td>
+                            <td>Not started</td>
+                        </tr>
+                        <tr>
+                            <td>Overlays & Extensions</td>
+                            <td>Not started</td>
+                        </tr>
+                        <tr>
+                            <td>Annotations</td>
+                            <td>Not started, low priority</td>
+                        </tr>
+                        <tr>
+                            <td>XML Schema</td>
+                            <td>Not started, low priority</i></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
+
     </div>
 </section>
 
