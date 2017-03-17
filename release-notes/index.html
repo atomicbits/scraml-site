@@ -78,7 +78,34 @@
             <br>
             <br>
 
-            <h4>Version 0.5.0.beta</h4>
+            <h4>Version 0.6.0</h4>
+
+            <p>Version 0.6 is finally out and it has an entirely new typesystem underneath that was built to better support RAML 1.0 types
+                and to make the process of generating other languages a lot easier. We see the addition of support for Android, iOS (Swift),
+                Python and C# within reach as soon as our RAML 1.0 support is complete. </p>
+
+            <ul>
+                <li>
+                    Version 0.6 now fully supports RAML 1.0 types, including multiple-inheritance, except for union types. We
+                    will focus on union types in version 0.8.
+                </li>
+                <li>
+                    Our RAML 1.0 parser currently has no support yet for the following basic features: parameterized traits and resource
+                    types, default media types, question mark for optional fields, baseUriParameters, date support and file type support.
+                    These features will be the focus for the 0.7 release. Other more advanced features such as libraries, overlays and
+                    extensions will end up in either 0.8 or 0.9.
+                </li>
+                <li>
+                    This version is more relaxed toward 'id' references in json-schema. You no longer have to provide a full URI in the
+                    root of a json-schema. Relative references are allowed now and you may also put them under the 'title' field
+                    instead of the 'id' field.
+                </li>
+            </ul>
+
+            <p>Migration highlights: none. We should be fully backward compatible. </p>
+            <br>
+
+            <h4>Version 0.5.0</h4>
 
             <ul>
                 <li>
@@ -96,6 +123,7 @@
             </ul>
 
             <p>Migration highlights: none. We should be fully backward compatible. </p>
+            <br>
 
             <h4>Version 0.4.14</h4>
 
@@ -117,7 +145,7 @@
             </ul>
 
             <p>Migration highlights: none.</p>
-
+            <br>
 
             <h4>Version 0.4.13</h4>
 
@@ -139,8 +167,8 @@
             </ul>
 
             <p>Migration highlights: You now have to set the DSL library dependency for the scraml client manually in Scala projects.
-                See the <a href="../scaladocumentation#_quickstart_scala">Scala quickstart</a></p>.
-
+                See the <a href="../scaladocumentation#_quickstart_scala">Scala quickstart</a>.</p>
+            <br>
 
             <h4>Version 0.4.12</h4>
 
