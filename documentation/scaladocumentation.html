@@ -1018,6 +1018,47 @@ delivers automatically.</p>
         <span class="tok-err">genericType:</span> <span class="tok-err">U</span></code></pre>
 </div>
 </div>
+<div id="json-schema-generic-type-referencing" class="listingblock">
+<div class="title">referencing a generic type in json-schema</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="json"><span class="tok-p">{</span>
+  <span class="tok-nt">&quot;$ref&quot;</span><span class="tok-p">:</span> <span class="tok-s2">&quot;http://atomicbits.io/raml10/paged-list.json#&quot;</span><span class="tok-p">,</span>
+  <span class="tok-nt">&quot;genericTypes&quot;</span><span class="tok-p">:</span> <span class="tok-p">{</span>
+    <span class="tok-nt">&quot;T&quot;</span><span class="tok-p">:</span> <span class="tok-p">{</span>
+      <span class="tok-nt">&quot;$ref&quot;</span><span class="tok-p">:</span> <span class="tok-s2">&quot;http://atomicbits.io/raml10/dog.json&quot;</span>
+    <span class="tok-p">},</span>
+    <span class="tok-nt">&quot;U&quot;</span><span class="tok-p">:</span> <span class="tok-p">{</span>
+      <span class="tok-nt">&quot;type&quot;</span><span class="tok-p">:</span> <span class="tok-s2">&quot;string&quot;</span>
+    <span class="tok-p">}</span>
+  <span class="tok-p">}</span>
+<span class="tok-p">}</span></code></pre>
+</div>
+</div>
+<div id="raml10-generic-type-referencing" class="listingblock">
+<div class="title">referencing a generic type in raml 1.0</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="json">  <span class="tok-err">Book:</span>
+    <span class="tok-err">type:</span> <span class="tok-err">object</span>
+    <span class="tok-err">discriminator:</span> <span class="tok-err">kind</span>
+    <span class="tok-err">properties:</span>
+      <span class="tok-err">isbn:</span>
+        <span class="tok-err">type:</span> <span class="tok-err">string</span>
+        <span class="tok-err">required:</span> <span class="tok-kc">true</span>
+      <span class="tok-err">title:</span>
+        <span class="tok-err">type:</span> <span class="tok-err">string</span>
+        <span class="tok-err">required:</span> <span class="tok-kc">true</span>
+      <span class="tok-err">genre:</span>
+        <span class="tok-err">type:</span> <span class="tok-err">string</span>
+      <span class="tok-err">author:</span>
+        <span class="tok-err">type:</span> <span class="tok-err">Author</span>
+        <span class="tok-err">required:</span> <span class="tok-kc">true</span>
+      <span class="tok-err">fans:</span>
+        <span class="tok-err">type:</span> <span class="tok-err">PagedList</span>
+        <span class="tok-err">genericTypes:</span>
+          <span class="tok-err">T:</span> <span class="tok-err">User</span>
+          <span class="tok-err">U:</span> <span class="tok-err">integer</span></code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_type_hierarchies_using_raml_1_0_types">Type hierarchies using RAML 1.0 types</h3>
@@ -1266,7 +1307,7 @@ class hierarchy serialization and the other examples used in this documentation 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-03-17 14:20:19 CET
+Last updated 2017-03-17 17:19:24 CET
 </div>
 </div>
 </body>

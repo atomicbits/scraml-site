@@ -756,6 +756,49 @@ The RAML 1.0 extension works exactly the same:
         genericType: U
 ----
 
+[[json-schema-generic-type-referencing]]
+[source,json]
+.referencing a generic type in json-schema
+----
+{
+  "$ref": "http://atomicbits.io/raml10/paged-list.json#",
+  "genericTypes": {
+    "T": {
+      "$ref": "http://atomicbits.io/raml10/dog.json"
+    },
+    "U": {
+      "type": "string"
+    }
+  }
+}
+----
+
+[[raml10-generic-type-referencing]]
+[source,json]
+.referencing a generic type in raml 1.0
+----
+  Book:
+    type: object
+    discriminator: kind
+    properties:
+      isbn:
+        type: string
+        required: true
+      title:
+        type: string
+        required: true
+      genre:
+        type: string
+      author:
+        type: Author
+        required: true
+      fans:
+        type: PagedList
+        genericTypes:
+          T: User
+          U: integer
+----
+
 
 === Type hierarchies using RAML 1.0 types
 
