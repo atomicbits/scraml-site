@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+  <head>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,288 +31,289 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-</head>
+  </head>
 
-<body id="page-top" class="index">
+  <body id="page-top" class="index">
 
-<!-- Navigation -->
-<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
-    <div class="container">
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+      <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header page-scroll">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand page-scroll" href="../">Scraml</a>
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand page-scroll" href="../">Scraml</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a class="page-scroll" href="../">Back</a>
-                </li>
-            </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a class="page-scroll" href="../">Back</a>
+            </li>
+          </ul>
         </div>
         <!-- /.navbar-collapse -->
-    </div>
-    <!-- /.container-fluid -->
-</nav>
+      </div>
+      <!-- /.container-fluid -->
+    </nav>
 
 
-<section>
-    <div class="container">
+    <section>
+      <div class="container">
         <div class="col-md-12">
-            <h3>Scraml Release Notes</h3>
+          <h3>Scraml Release Notes</h3>
 
-            <p>Scraml is still on its way to version 1.0 as feedback from users flows in and provides invaluable feedback to improve
-                the tool. Scraml is thoroughly tested as a DSL for acceptance testing of real-live projects and it is now also being
-                used as a runtime client in several production sytems. The internal interfaces may still change between point releases,
-                so be sure to check this page when upgrading to a newer version. Version 1.0 will be released when fully tested
-                RAML 1.0 support is ready.</p>
-            <br>
-            <p>Stay updated whenever we release new versions by <a href="https://twitter.com/scraml_io">following us on twitter</a>.</p>
-            <br>
-            <br>
+          <p>Scraml is still on its way to version 1.0 as feedback from users flows in and provides invaluable feedback to improve
+            the tool. Scraml is thoroughly tested as a DSL for acceptance testing of real-live projects and it is now also being
+            used as a runtime client in several production sytems. The internal interfaces may still change between point releases,
+            so be sure to check this page when upgrading to a newer version. Version 1.0 will be released when fully tested
+            RAML 1.0 support is ready.</p>
+          <br>
+          <p>Stay updated whenever we release new versions by <a href="https://twitter.com/scraml_io">following us on twitter</a>.</p>
+          <br>
+          <br>
 
-            <h4>Version 0.6.0</h4>
+          <h4>Version 0.6.0</h4>
 
-            <p>Version 0.6 is finally out and it has an entirely new typesystem underneath that was built to better support RAML 1.0 types
-                and to make the process of generating other languages a lot easier. We see the addition of support for Android, iOS (Swift),
-                Python and C# within reach as soon as our RAML 1.0 support is complete. </p>
+          <p>Version 0.6 is finally out with some huge refactorings in the underlying generation engine. Scraml now has an entirely new
+            typesystem underneath that is built to better support RAML 1.0 types and to make the process of generating other languages
+            a lot easier. We see the addition of support for Android, iOS (Swift), Python and C# within reach as soon as our RAML 1.0
+            support is complete. </p>
 
-            <ul>
-                <li>
-                    Version 0.6 now fully supports RAML 1.0 types, including multiple-inheritance, except for union types. We
-                    will focus on union types in version 0.8.
-                </li>
-                <li>
-                    Our RAML 1.0 parser currently has no support yet for the following basic features: parameterized traits and resource
-                    types, default media types, question mark for optional fields, baseUriParameters, date support and file type support.
-                    These features will be the focus for the 0.7 release. Other more advanced features such as libraries, overlays and
-                    extensions will end up in either 0.8 or 0.9.
-                </li>
-                <li>
-                    This version is more relaxed toward 'id' references in json-schema. You no longer have to provide a full URI in the
-                    root of a json-schema. Relative references are allowed now and you may also put them under the 'title' field
-                    instead of the 'id' field.
-                </li>
-            </ul>
+          <ul>
+            <li>
+              Version 0.6 now fully supports RAML 1.0 types, including multiple-inheritance, except for union types. We
+              will focus on union types in version 0.8.
+            </li>
+            <li>
+              Our RAML 1.0 parser currently has no support yet for the following basic features: parameterized traits and resource
+              types, default media types, question mark for optional fields, baseUriParameters, date support and file type support.
+              These features will be the focus for the 0.7 release. Other more advanced features such as libraries, overlays and
+              extensions will end up in either 0.8 or 0.9.
+            </li>
+            <li>
+              This version is more relaxed toward 'id' references in json-schema. You no longer have to provide a full URI in the
+              root of a json-schema. Relative references are allowed now and you may also put them under the 'title' field
+              instead of the 'id' field.
+            </li>
+          </ul>
 
-            <p>Migration highlights: none. We should be fully backward compatible. </p>
-            <br>
+          <p>Migration highlights: none. We should be fully backward compatible. </p>
+          <br>
 
-            <h4>Version 0.5.0</h4>
+          <h4>Version 0.5.0</h4>
 
-            <ul>
-                <li>
-                    This version uses a entirely new RAML parser that is ready to process basic RAML 1.0 types. Json-schema is still
-                    supported as
-                    before. The beta version is a request to all scraml users to test against regression bugs. Please, report all
-                    regression bugs via <a
-                        href="mailto:&#102;&#101;&#101;&#100;&#098;&#097;&#099;&#107;&#064;&#115;&#099;&#114;&#097;&#109;&#108;&#046;&#105;&#111;">
-                    &#102;&#101;&#101;&#100;&#098;&#097;&#099;&#107;&#064;&#115;&#099;&#114;&#097;&#109;&#108;&#046;&#105;&#111;</a>
-                    and send us the shortest possible RAML sample that illustrates the bug.
-                </li>
-                <li>
-                    This version of scraml will be extended in the coming months to support more and more RAML 1.0 features.
-                </li>
-            </ul>
+          <ul>
+            <li>
+              This version uses a entirely new RAML parser that is ready to process basic RAML 1.0 types. Json-schema is still
+              supported as
+              before. The beta version is a request to all scraml users to test against regression bugs. Please, report all
+              regression bugs via <a
+                href="mailto:&#102;&#101;&#101;&#100;&#098;&#097;&#099;&#107;&#064;&#115;&#099;&#114;&#097;&#109;&#108;&#046;&#105;&#111;">
+              &#102;&#101;&#101;&#100;&#098;&#097;&#099;&#107;&#064;&#115;&#099;&#114;&#097;&#109;&#108;&#046;&#105;&#111;</a>
+              and send us the shortest possible RAML sample that illustrates the bug.
+            </li>
+            <li>
+              This version of scraml will be extended in the coming months to support more and more RAML 1.0 features.
+            </li>
+          </ul>
 
-            <p>Migration highlights: none. We should be fully backward compatible. </p>
-            <br>
+          <p>Migration highlights: none. We should be fully backward compatible. </p>
+          <br>
 
-            <h4>Version 0.4.14</h4>
+          <h4>Version 0.4.14</h4>
 
-            <ul>
-                <li>
-                    The client configuration now has the option to set a default request charset. If this option is not set manually,
-                    it defaults to the Java VM's default charset. This request charset will automatically be added to all outgoing
-                    requests that contain a string value and where the RAML specs didn't specify a charset parameter with the
-                    media type. For example when the user specifies the mediatype 'application/json' (content-type) for a request, then
-                    scraml will add the default charset. If the user specifies 'application/json;charset=utf-8', then the specified
-                    charset will be sent.
-                </li>
-                <li>
-                    Scraml will no parse the incoming charset value of the content-type header and use that charset to interpret the
-                    string value of that response. If no charset value is present, then the default incoming charset value (which was
-                    already present as a clientconfig option) will be used. The default value of the incoming charset parameter is
-                    the JVM's default charset.
-                </li>
-            </ul>
+          <ul>
+            <li>
+              The client configuration now has the option to set a default request charset. If this option is not set manually,
+              it defaults to the Java VM's default charset. This request charset will automatically be added to all outgoing
+              requests that contain a string value and where the RAML specs didn't specify a charset parameter with the
+              media type. For example when the user specifies the mediatype 'application/json' (content-type) for a request, then
+              scraml will add the default charset. If the user specifies 'application/json;charset=utf-8', then the specified
+              charset will be sent.
+            </li>
+            <li>
+              Scraml will no parse the incoming charset value of the content-type header and use that charset to interpret the
+              string value of that response. If no charset value is present, then the default incoming charset value (which was
+              already present as a clientconfig option) will be used. The default value of the incoming charset parameter is
+              the JVM's default charset.
+            </li>
+          </ul>
 
-            <p>Migration highlights: none.</p>
-            <br>
+          <p>Migration highlights: none.</p>
+          <br>
 
-            <h4>Version 0.4.13</h4>
+          <h4>Version 0.4.13</h4>
 
-            <ul>
-                <li>
-                    The SBT plugin has been extended to support multi-project builds that generate code in multiple submodules
-                    simultaneously. This enables people to build a Scala and Java client in the same project, or any number of
-                    scraml clients (one per submodule) in parallel. Drop us an email if you're interested in an example for such
-                    an SBT project setup. The maven plugin remains unchanged for now.
-                </li>
-                <li>
-                    The SBT plugin doesn't automatically inject the scraml-dsl-scala dependency any longer. This feature was very cool
-                    and handy, but it isn't possible to tune the dependency injection so that it only injects that dependency in certain
-                    submodules and it also isn't possible to choose which dependency to inject based on the language set (e.g. injecting
-                    scraml-dsl-java when Java is set as the client source language). Now you have to set the library dependency yourself,
-                    but you can use the scramlVersion.value variable in your built.sbt definition so that the scraml version is
-                    automatically copied from the scraml plugin's version.
-                </li>
-            </ul>
+          <ul>
+            <li>
+              The SBT plugin has been extended to support multi-project builds that generate code in multiple submodules
+              simultaneously. This enables people to build a Scala and Java client in the same project, or any number of
+              scraml clients (one per submodule) in parallel. Drop us an email if you're interested in an example for such
+              an SBT project setup. The maven plugin remains unchanged for now.
+            </li>
+            <li>
+              The SBT plugin doesn't automatically inject the scraml-dsl-scala dependency any longer. This feature was very cool
+              and handy, but it isn't possible to tune the dependency injection so that it only injects that dependency in certain
+              submodules and it also isn't possible to choose which dependency to inject based on the language set (e.g. injecting
+              scraml-dsl-java when Java is set as the client source language). Now you have to set the library dependency yourself,
+              but you can use the scramlVersion.value variable in your built.sbt definition so that the scraml version is
+              automatically copied from the scraml plugin's version.
+            </li>
+          </ul>
 
-            <p>Migration highlights: You now have to set the DSL library dependency for the scraml client manually in Scala projects.
-                See the <a href="../scaladocumentation#_quickstart_scala">Scala quickstart</a>.</p>
-            <br>
+          <p>Migration highlights: You now have to set the DSL library dependency for the scraml client manually in Scala projects.
+            See the <a href="../scaladocumentation#_quickstart_scala">Scala quickstart</a>.</p>
+          <br>
 
-            <h4>Version 0.4.12</h4>
+          <h4>Version 0.4.12</h4>
 
-            <ul>
-                <li>Improvement: all response bodies in the 200 status-range can now have typed bodies, given there is only
-                    one possible response type for that method. Multi-status typed responses is still on the backlog.
-                </li>
-                <li>
-                    Bugfix: error response statuses on requests with typed responses are now handled properly.
-                </li>
-            </ul>
+          <ul>
+            <li>Improvement: all response bodies in the 200 status-range can now have typed bodies, given there is only
+              one possible response type for that method. Multi-status typed responses is still on the backlog.
+            </li>
+            <li>
+              Bugfix: error response statuses on requests with typed responses are now handled properly.
+            </li>
+          </ul>
 
-            <p>Migration highlights: none, but please upgrade the ning dependency to 1.9.36, it has some bugfixes in its connection
-                pool.</p>
-            <br>
+          <p>Migration highlights: none, but please upgrade the ning dependency to 1.9.36, it has some bugfixes in its connection
+            pool.</p>
+          <br>
 
-            <h4>Version 0.4.11</h4>
+          <h4>Version 0.4.11</h4>
 
-            <ul>
-                <li>Minor bugfix, generated parameter names are now sanitized for Java/Scala compliancy.</li>
-            </ul>
+          <ul>
+            <li>Minor bugfix, generated parameter names are now sanitized for Java/Scala compliancy.</li>
+          </ul>
 
-            <p>Migration highlights: none.</p>
-            <br>
+          <p>Migration highlights: none.</p>
+          <br>
 
-            <h4>Version 0.4.10</h4>
+          <h4>Version 0.4.10</h4>
 
-            <ul>
-                <li>Minor bugfix in the imports of the generated code.</li>
-            </ul>
+          <ul>
+            <li>Minor bugfix in the imports of the generated code.</li>
+          </ul>
 
-            <p>Migration highlights: none.</p>
-            <br>
+          <p>Migration highlights: none.</p>
+          <br>
 
-            <h4>Version 0.4.9</h4>
+          <h4>Version 0.4.9</h4>
 
-            <ul>
-                <li>Renamed the Java DSL package name to io.atomicbits.scraml.jdsl</li>
-                <li>Schema ids are no longer required on inline json-schema's</li>
-            </ul>
+          <ul>
+            <li>Renamed the Java DSL package name to io.atomicbits.scraml.jdsl</li>
+            <li>Schema ids are no longer required on inline json-schema's</li>
+          </ul>
 
-            <p>Migration highlights: The java supporting DSL package has been renamed to io.atomicbits.scraml.jdsl</p>
-            <br>
+          <p>Migration highlights: The java supporting DSL package has been renamed to io.atomicbits.scraml.jdsl</p>
+          <br>
 
-            <h4>Version 0.4.8</h4>
+          <h4>Version 0.4.8</h4>
 
-            <ul>
-                <li>Important bugfix in the Java DSL backing library on the addHeader() method.</li>
-                <li>No breaking changes in the generated DSL.</li>
-            </ul>
+          <ul>
+            <li>Important bugfix in the Java DSL backing library on the addHeader() method.</li>
+            <li>No breaking changes in the generated DSL.</li>
+          </ul>
 
-            <p>Migration highlights: none.</p>
-            <br>
+          <p>Migration highlights: none.</p>
+          <br>
 
-            <h4>Version 0.4.7</h4>
+          <h4>Version 0.4.7</h4>
 
-            <ul>
-                <li>Factory classes for backing client injection</li>
-                <li>Ning dependency is now set to 'provided', meaning it needs to be manually included in projects using Scraml.</li>
-                <li>No breaking changes in the generated DSL.</li>
-            </ul>
+          <ul>
+            <li>Factory classes for backing client injection</li>
+            <li>Ning dependency is now set to 'provided', meaning it needs to be manually included in projects using Scraml.</li>
+            <li>No breaking changes in the generated DSL.</li>
+          </ul>
 
-            <p>Migration highlights: update your pom.xml (<a href="/javadocumentation#_quickstart_java">Java</a>) or build.sbt (<a
-                    href="/scaladocumentation#_quickstart_scala">Scala</a>) files to manually include the ning http-client dependency.</p>
-            <br>
+          <p>Migration highlights: update your pom.xml (<a href="/javadocumentation#_quickstart_java">Java</a>) or build.sbt (<a
+              href="/scaladocumentation#_quickstart_scala">Scala</a>) files to manually include the ning http-client dependency.</p>
+          <br>
 
 
-            <h4>Earlier versions</h4>
+          <h4>Earlier versions</h4>
 
-            <p>Early releases experienced a fast evolution and had many breaking changes as testing the DSLs in acceptance testing
-                frameworks of production systems provided us lots of feedback.</p>
-            <br>
+          <p>Early releases experienced a fast evolution and had many breaking changes as testing the DSLs in acceptance testing
+            frameworks of production systems provided us lots of feedback.</p>
+          <br>
 
         </div>
-    </div>
-</section>
+      </div>
+    </section>
 
 
-<footer>
-    <div class="container">
+    <footer>
+      <div class="container">
         <div class="row">
-            <div class="col-md-4">
-                <span class="copyright">Copyright &copy; Atomic BITS bvba 2017</span>
-            </div>
-            <div class="col-md-4">
-                <ul class="list-inline social-buttons">
-                    <li><a href="https://twitter.com/scraml_io"><i class="fa fa-twitter"></i></a>
-                    </li>
-                    <!--<li><a href="#"><i class="fa fa-facebook"></i></a>-->
-                    <!--</li>-->
-                    <!--<li><a href="#"><i class="fa fa-linkedin"></i></a>-->
-                    <!--</li>-->
-                </ul>
-            </div>
-            <div class="col-md-4">
-                <ul class="list-inline quicklinks">
-                    <li>Scraml&trade;</li>
-                    <!--<li><a href="#">Privacy Policy</a>-->
-                    <!--</li>-->
-                    <!--<li><a href="#">Terms of Use</a>-->
-                    <!--</li>-->
-                </ul>
-            </div>
+          <div class="col-md-4">
+            <span class="copyright">Copyright &copy; Atomic BITS bvba 2017</span>
+          </div>
+          <div class="col-md-4">
+            <ul class="list-inline social-buttons">
+              <li><a href="https://twitter.com/scraml_io"><i class="fa fa-twitter"></i></a>
+              </li>
+              <!--<li><a href="#"><i class="fa fa-facebook"></i></a>-->
+              <!--</li>-->
+              <!--<li><a href="#"><i class="fa fa-linkedin"></i></a>-->
+              <!--</li>-->
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <ul class="list-inline quicklinks">
+              <li>Scraml&trade;</li>
+              <!--<li><a href="#">Privacy Policy</a>-->
+              <!--</li>-->
+              <!--<li><a href="#">Terms of Use</a>-->
+              <!--</li>-->
+            </ul>
+          </div>
         </div>
-    </div>
-</footer>
+      </div>
+    </footer>
 
 
-<!-- jQuery -->
-<script src="../js/jquery.js"></script>
+    <!-- jQuery -->
+    <script src="../js/jquery.js"></script>
 
-<!-- Bootstrap Core JavaScript -->
-<script src="../js/bootstrap.min.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../js/bootstrap.min.js"></script>
 
-<!-- Plugin JavaScript -->
-<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-<script src="../js/classie.js"></script>
+    <!-- Plugin JavaScript -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="../js/classie.js"></script>
 
-<!-- Contact Form JavaScript -->
-<script src="../js/jqBootstrapValidation.js"></script>
-<script src="../js/contact_me.js"></script>
+    <!-- Contact Form JavaScript -->
+    <script src="../js/jqBootstrapValidation.js"></script>
+    <script src="../js/contact_me.js"></script>
 
-<!-- Custom Theme JavaScript -->
-<script src="../js/agency.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="../js/agency.js"></script>
 
-<!-- Google Analytics tracker for scraml.io. Paste this in each page that needs tracking. -->
-<script>
-    (function (i, s, o, g, r, a, m) {
-        i['GoogleAnalyticsObject'] = r;
-        i[r] = i[r] || function () {
+    <!-- Google Analytics tracker for scraml.io. Paste this in each page that needs tracking. -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
                     (i[r].q = i[r].q || []).push(arguments)
                 }, i[r].l = 1 * new Date();
-        a = s.createElement(o),
+            a = s.createElement(o),
                 m = s.getElementsByTagName(o)[0];
-        a.async = 1;
-        a.src = g;
-        m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-    ga('create', 'UA-69181366-1', 'auto');
-    ga('send', 'pageview');
-</script>
+        ga('create', 'UA-69181366-1', 'auto');
+        ga('send', 'pageview');
+    </script>
 
-</body>
+  </body>
 
 </html>
 
