@@ -708,7 +708,7 @@ delivers automatically.
 The RAML 1.0 extension works exactly the same:
 
 [[raml10-generic-typing]]
-[source,json]
+[source,yaml]
 .raml 1.0 extension that enables modelling generic types
 ----
   PagedList:
@@ -745,7 +745,7 @@ The RAML 1.0 extension works exactly the same:
 ----
 
 [[raml10-generic-type-referencing]]
-[source,json]
+[source,yaml]
 .referencing a generic type in raml 1.0
 ----
   Book:
