@@ -225,15 +225,11 @@
                         </tr>
                         <tr>
                             <td>RAML 1.0 support</td>
-                            <td>Ongoing in releases 0.5.x to 1.0, see RAML 1.0 compatibility list</td>
-                        </tr>
-                        <tr>
-                            <td>Asynchronous streaming support</td>
-                            <td>Expected in 2017</td>
+                            <td>Ongoing in current releases up to version 1.0, see RAML 1.0 compatibility list</td>
                         </tr>
                         <tr>
                             <td>Gradle support</td>
-                            <td>Expected in 2017</td>
+                            <td>On the backlog</td>
                         </tr>
                         <tr>
                             <td>Command line interface</td>
@@ -249,23 +245,19 @@
                         </tr>
                         <tr>
                             <td>Adroid (Java) client generation</td>
-                            <td>Expected in 2017</td>
-                        </tr>
-                        <tr>
-                            <td>Python client generation</td>
-                            <td>Expected in 2017</td>
-                        </tr>
-                        <tr>
-                            <td>.NET (C#) client generation</td>
-                            <td>Expected in 2017</td>
+                            <td>On the backlog</td>
                         </tr>
                         <tr>
                             <td>OS X and iOS (Swift) client generation</td>
-                            <td>Expected in 2017</td>
+                            <td>On the backlog</td>
                         </tr>
                         <tr>
-                            <td>Scraml-Mock: a DSL-configurable server mock (useful for integration testing)</td>
-                            <td>Priority will be based upon user requests</td>
+                            <td>Python client generation</td>
+                            <td>On the backlog</td>
+                        </tr>
+                        <tr>
+                            <td>.NET (C#) client generation</td>
+                            <td>On the backlog</td>
                         </tr>
                         </tbody>
                     </table>
@@ -288,7 +280,7 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>Basic RAML 1.0 types (without multiple inheritance or union types)</td>
+                            <td>RAML 1.0 types</td>
                             <td><i class="fa fa-check fa-fw"></i></td>
                         </tr>
                         <tr>
@@ -296,12 +288,8 @@
                             <td><i class="fa fa-check fa-fw"></i></td>
                         </tr>
                         <tr>
-                            <td>Union types and multiple inheritance</td>
-                            <td>Ongoing (a big one)</td>
-                        </tr>
-                        <tr>
-                            <td>Additional object properties</td>
-                            <td>Ongoing</td>
+                            <td>Multiple inheritance</td>
+                            <td><i class="fa fa-check fa-fw"></td>
                         </tr>
                         <tr>
                             <td>Parameterized Traits</td>
@@ -316,6 +304,14 @@
                             <td>Partial (now only for single media type)</td>
                         </tr>
                         <tr>
+                            <td>Question mark for optional fields and parameters</td>
+                            <td>Ongoing</td>
+                        </tr>
+                        <tr>
+                            <td>queryString? support (as opposed to queryParameters, which are supported)</td>
+                            <td>Ongoing</td>
+                        </tr>
+                        <tr>
                             <td>baseUriParameters</td>
                             <td>Ongoing</td>
                         </tr>
@@ -328,15 +324,15 @@
                             <td>Ongoing</td>
                         </tr>
                         <tr>
+                            <td>Union types</td>
+                            <td>Ongoing (a big one)</td>
+                        </tr>
+                        <tr>
                             <td>Multidimensional arrays</td>
                             <td>Ongoing</td>
                         </tr>
                         <tr>
-                            <td>Question mark for optional fields and parameters</td>
-                            <td>Ongoing</td>
-                        </tr>
-                        <tr>
-                            <td>queryString? support (as opposed to queryParameters, which are supported)</td>
+                            <td>Additional object properties</td>
                             <td>Ongoing</td>
                         </tr>
                         <tr>
@@ -373,7 +369,7 @@
                         </tr>
                         <tr>
                             <td>XML Schema</td>
-                            <td>Not started, low priority</i></td>
+                            <td>Not started, low priority</td>
                         </tr>
                         </tbody>
                     </table>
@@ -560,7 +556,7 @@
                 </div>
                 <h3 class="section-subheading text-muted">The Scraml commercial license is a company wide license for any number of users
                     and any number generated clients.
-                    <a href="/licenses/scraml-commercial-license-v1.txt">Download the full license here.</a></h3>
+                    <a href="licenses/scraml-commercial-license-v2.txt">Download the full license here.</a></h3>
                 <br>
                 <br>
 
@@ -571,39 +567,21 @@
                         <thead>
                         <tr>
                             <th>Scraml license</th>
-                            <th>Case</th>
                             <th>Generated code license</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
                             <td>AGPL <br>(default license)</td>
-                            <td>All cases</td>
-                            <td>AGPL</td>
+                            <td>AGPL <br>(inherited from the DSL support libraries the generated code uses)</td>
                         </tr>
                         <tr>
                             <td>Scraml commercial license</td>
-                            <td>The generated client represents the licensee's APIs</td>
-                            <td>Free of choice</td>
-                        </tr>
-                        <tr>
-                            <td>Scraml commercial license</td>
-                            <td>The generated code is used for accessing 3rd party services</td>
-                            <td>Free of choice, but wit limited distribution freedom. Distribution is only allowed when bundled
-                                with the licensee's products, but not as a standalone library.
-                            </td>
+                            <td>Free of choice <br>(you use the DSL support libraries under the commercial license)</td>
                         </tr>
                         <tr>
                             <td>Scraml free license <br>(only for registered non-commercial open source projects)</td>
-                            <td>The generated client represents the open source project's services</td>
-                            <td>Free of choice</td>
-                        </tr>
-                        <tr>
-                            <td>Scraml free license</td>
-                            <td>The generated code is used for accessing 3rd party services</td>
-                            <td>Free of choice, but wit limited distribution freedom. Distribution is only allowed when bundled
-                                with the open source project, not as standalone library.
-                            </td>
+                            <td>Free of choice <br>(you use the DSL support libraries under the free license conditions)</td>
                         </tr>
                         </tbody>
                     </table>
