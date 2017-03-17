@@ -5,8 +5,8 @@
 :pygments-style: friendly
 
 
-We are currently on RAML version 0.8 and we highly focus on json-schema models to represent data transfer objects. We are upgrading to
-RAML version 1.0 and its own data representation format as soon as we can.
+We are currently compatible with RAML 1.0 types, except for union types. We are fully backward compatible with version 0.8.
+The transfer objects in the samples code below are mostly expressed in json-schema, but you can easily rewrite them into RAML 1.0 types.
 
 == Quickstart Scala
 
@@ -271,15 +271,39 @@ POST action that sends a User and receives a Link.
 [source,yaml]
 .user service
 ----
-#%RAML 0.8
+#%RAML 1.0
 ---
 title: My api 
 version: v1
 
-schemas:
+types:
   - link:         !include schemas/link.json
   - method:       !include schemas/method.json
   - user:         !include schemas/user.json
+  - Book:
+      type: object
+      properties:
+        isbn:
+          type: string
+          required: true
+        title:
+          type: string
+          required: true
+        genre:
+          type: string
+        author:
+          type: Author
+          required: true
+  - Author:
+      type: object
+      properties:
+        firstName:
+          type: string
+          required: true
+        lastName:
+          type: string
+          required: true
+
 
 /rest/user/:
   get:
@@ -309,6 +333,22 @@ schemas:
                   "$ref": "user.json"
                 }
               }
+
+/rest/books:
+  get:
+    description: Get all books
+    responses:
+      200:
+        body:
+          application/json:
+            type: Book[]
+  post:
+    body:
+      application/json:
+        type: Book
+    responses:
+      201:
+
 ----
 
 Compiling the codebase using sbt, [scramlfont]#Scraml# will generate the DSL in the code generation step before actual compilation. This
@@ -594,12 +634,10 @@ arbitrary JSON, we can call `.asJson` to get the JSON body.
 
 
 
-=== Generic typing in json-schema
+=== Generic typing in json-schema and RAML 1.0
 
-Officially, there is no generic typing possible in json-schema because json-schema is not aan object-oriented modelling language. It
-is a language that was build to specify the rules to which JSON data has to adhere. In reality, however, data that is exchanged between
-services is usually modelled as object-oriented data constructs. Therefore, we really want to have the same sort of flexibility to
-model JSON data in an object-oriented fashion.
+Officially, there is no generic typing possible neither in json-schema, nor in RAML 1.0!
+Scraml, however supports a way around using language extensions that should not break the existing specs.
 
 Generic typing is added as a json-schema extension that [scramlfont]#Scraml# knows how to process. The illustration below shows a
 <<raml-generic-typing>>. It is a representation for a paged list that has two type variables `T` and `U` referring to the type of the
@@ -610,7 +648,7 @@ field that refers to the type symbol.
 
 [[raml-generic-typing]]
 [source,json]
-.json-shema extension that enables modelling generic types
+.json-schema extension that enables modelling generic types
 ----
 {
   "id": "http://atomicbits.io/schema/paged-list.json#",
@@ -666,6 +704,134 @@ object PagedList {
 
 Because of the type parameters, the Play formats for this case class have to be generated in a different way, which [scramlfont]#Scraml#
 delivers automatically.
+
+The RAML 1.0 extension works exactly the same:
+
+[[raml10-generic-typing]]
+[source,json]
+.raml 1.0 extension that enables modelling generic types
+----
+  PagedList:
+    type: object
+    typeVariables: [T, U]
+    properties:
+      count:
+        type: integer
+      elements:
+        type: array
+        items:
+          type: object
+          genericType: T
+      owner:
+        type: object
+        genericType: U
+----
+
+
+=== Type hierarchies using RAML 1.0 types
+
+We support the generation of code for RAML 1.0's multiple inheritance. Where needed, Scala traits are introduced in the generated code
+to simulate the behavior expected form multiple inheritance.
+
+[[raml-bookservice]]
+[source,yaml]
+.book service
+----
+#%RAML 1.0
+---
+title: book api
+version: 1.0
+mediaType: application/json
+
+types:
+  Book:
+    type: object
+    discriminator: kind
+    properties:
+      isbn:
+        type: string
+        required: true
+      title:
+        type: string
+        required: true
+      genre:
+        type: string
+      author:
+        type: Author
+        required: true
+  Author:
+    type: object
+    properties:
+      firstName:
+        type: string
+        required: true
+      lastName:
+        type: string
+        required: true
+  WithVillain:
+    type: object
+    properties:
+      villain:
+        type: string
+  ComicBook:
+    type: [Book, WithVillain]
+    properties:
+      hero:
+        type: string
+  SciFiComicBook:
+    type: ComicBook
+    discriminatorValue: ScienceFictionComicBook
+    properties:
+      era:
+        type: string
+
+/books:
+  get:
+    description: Get all books
+    responses:
+      200:
+        body:
+          application/json:
+            type: Book[]
+  post:
+    body:
+      application/json:
+        type: Book
+    responses:
+      201:
+
+/books/comicbooks:
+  get:
+    description: Get all comicbooks
+    responses:
+      200:
+        body:
+          application/json:
+            type: ComicBook[]
+  post:
+    body:
+      application/json:
+        type: ComicBook
+    responses:
+      201:
+
+/books/comicbooks/scificomicbooks:
+  get:
+    description: Get all SciFi comicbooks
+    responses:
+      200:
+        body:
+          application/json:
+            type: SciFiComicBook[]
+  post:
+    body:
+      application/json:
+        type: SciFiComicBook
+    responses:
+      201:
+
+----
+
 
 
 === Type hierarchies in json-schema
