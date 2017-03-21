@@ -17,7 +17,7 @@ Setting up [scramlfont]#Scraml# using the maven-plugin is super-easy if you add 
 .configure the scraml maven-plugin, the dsl dependency and the http client dependency in your maven pom.xml file
 ----
     <properties>
-        <scraml.version>0.6.0</scraml.version>
+        <scraml.version>0.6.1</scraml.version>
     </properties>
 
     <build>
@@ -644,6 +644,10 @@ elements in the paged list and the optional owner of the list respectively. The 
 specification and represents the type symbols as an array of strings. The type symbols are repeated further down the object model's
 properties where they apply. They must be specified on an object type that takes no configuration other than the `genericType`
 field that refers to the type symbol.
+
+TIP: The "id" field in a json-schema file is mandatory, but we don't require to use the full URI format. You can also use
+ a relative reference instead. Whereas the full URI version is scoped by the URI path, the relative verion will be scoped by
+  relative main raml file location. Instead of the "id" field, the "title" field can also be used.
 
 [[raml-generic-typing]]
 [source,json]

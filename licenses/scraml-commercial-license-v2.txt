@@ -101,7 +101,7 @@ TITLE, AND NON-INFRINGEMENT, WITH RESPECT TO ANY THIRD PARTY SOFTWARE.
 6. LICENSE FEES AND PAYMENTS
 
 Licensee agrees to the terms and conditions of Software purchase published on
-Licensor's website at scraml.com. Licensee will pay to Licensor the license fee
+Licensor's website at scraml.io. Licensee will pay to Licensor the license fee
 and other charges and expenses as set forth in an appropriate invoice or other
 purchase documentation. Licensor may charge Licensee interest for any payment
 that is more than thirty (30) days past due at the rate of one and one-half
@@ -111,7 +111,7 @@ lower.
 7. UPGRADES
 
 (a) Licensor will provide generally available new versions of Software to
-Licensee via Licensor's web site at scraml.com.
+Licensee via Licensor's web site at scraml.io.
 
 8. LIMITED WARRANTY
 
@@ -202,4 +202,4 @@ parties, their successors and assigns.
 For exceptions or modifications to this Agreement, please contact Licensor at:
 
 Address: Sterrebeeksesteenweg 105, Everberg, 3078, Belgium
-E-mail: sales@atomicbits.io
+E-mail: sales@scraml.io

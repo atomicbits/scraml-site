@@ -52,7 +52,7 @@ The transfer objects in the samples code below are mostly expressed in json-sche
 <div id="plugins.sbt" class="listingblock">
 <div class="title">add the scraml sbt-plugin to project/plugins.sbt</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="scala"><span class="tok-n">addSbtPlugin</span><span class="tok-o">(</span><span class="tok-s">&quot;io.atomicbits&quot;</span>      <span class="tok-o">%</span> <span class="tok-s">&quot;scraml-sbt-plugin&quot;</span>   <span class="tok-o">%</span> <span class="tok-s">&quot;0.6.0&quot;</span><span class="tok-o">)</span></code></pre>
+<pre class="pygments highlight"><code data-lang="scala"><span class="tok-n">addSbtPlugin</span><span class="tok-o">(</span><span class="tok-s">&quot;io.atomicbits&quot;</span>      <span class="tok-o">%</span> <span class="tok-s">&quot;scraml-sbt-plugin&quot;</span>   <span class="tok-o">%</span> <span class="tok-s">&quot;0.6.1&quot;</span><span class="tok-o">)</span></code></pre>
 </div>
 </div>
 <div id="build.sbt" class="listingblock">
@@ -561,7 +561,6 @@ POST action that sends a User and receives a Link.</p>
           <span class="tok-l-Scalar-Plain">application/json</span><span class="tok-p-Indicator">:</span>
             <span class="tok-l-Scalar-Plain">schema</span><span class="tok-p-Indicator">:</span> <span class="tok-p-Indicator">|</span>
               <span class="tok-no">{</span>
-                <span class="tok-no">&quot;id&quot;: &quot;http://atomicbits.io/schema/anonymous1.json&quot;,</span>
                 <span class="tok-no">&quot;type&quot;: &quot;array&quot;,</span>
                 <span class="tok-no">&quot;items&quot;: {</span>
                   <span class="tok-no">&quot;$ref&quot;: &quot;user.json&quot;</span>
@@ -937,6 +936,20 @@ specification and represents the type symbols as an array of strings. The type s
 properties where they apply. They must be specified on an object type that takes no configuration other than the <code>genericType</code>
 field that refers to the type symbol.</p>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The "id" field in a json-schema file is mandatory, but we don&#8217;t require to use the full URI format. You can also use
+ a relative reference instead. Whereas the full URI version is scoped by the URI path, the relative verion will be scoped by
+  relative main raml file location. Instead of the "id" field, the "title" field can also be used.
+</td>
+</tr>
+</table>
+</div>
 <div id="raml-generic-typing" class="listingblock">
 <div class="title">json-schema extension that enables modelling generic types</div>
 <div class="content">
@@ -1307,7 +1320,7 @@ class hierarchy serialization and the other examples used in this documentation 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-03-17 17:24:34 CET
+Last updated 2017-03-21 22:14:55 CET
 </div>
 </div>
 </body>
