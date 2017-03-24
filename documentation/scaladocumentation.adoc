@@ -17,7 +17,7 @@ Setting up [scramlfont]#Scraml# using the sbt-plugin is super-easy if you follow
 [source,scala]
 .add the scraml sbt-plugin to project/plugins.sbt
 ----
-addSbtPlugin("io.atomicbits"      % "scraml-sbt-plugin"   % "0.6.1")
+addSbtPlugin("io.atomicbits"      % "scraml-sbt-plugin"   % "0.7.0")
 ----
 
 
@@ -287,22 +287,22 @@ types:
           type: string
           required: true
         title:
+          description: the title has no required field, but 'true' is the default value anyway
           type: string
-          required: true
         genre:
           type: string
         author:
           type: Author
-          required: true
   - Author:
       type: object
       properties:
         firstName:
           type: string
-          required: true
         lastName:
           type: string
-          required: true
+        hobbies?:
+          description: this is an optional field 'hobbies'
+          type: string[]
 
 
 /rest/user/:
@@ -736,14 +736,14 @@ The RAML 1.0 extension works exactly the same:
 ----
 {
   "$ref": "http://atomicbits.io/raml10/paged-list.json#",
-  "genericTypes": {
-    "T": {
+  "genericTypes": [
+    {
       "$ref": "http://atomicbits.io/raml10/dog.json"
     },
-    "U": {
+    {
       "type": "string"
     }
-  }
+  ]
 }
 ----
 
@@ -768,9 +768,7 @@ The RAML 1.0 extension works exactly the same:
         required: true
       fans:
         type: PagedList
-        genericTypes:
-          T: User
-          U: integer
+        genericTypes: [User, integer]
 ----
 
 

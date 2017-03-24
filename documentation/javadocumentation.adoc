@@ -17,7 +17,7 @@ Setting up [scramlfont]#Scraml# using the maven-plugin is super-easy if you add 
 .configure the scraml maven-plugin, the dsl dependency and the http client dependency in your maven pom.xml file
 ----
     <properties>
-        <scraml.version>0.6.1</scraml.version>
+        <scraml.version>0.7.0</scraml.version>
     </properties>
 
     <build>
@@ -350,6 +350,30 @@ types:
   - link:         !include schemas/link.json
   - method:       !include schemas/method.json
   - user:         !include schemas/user.json
+  - Book:
+      type: object
+      properties:
+        isbn:
+          type: string
+          required: true
+        title:
+          description: the title has no required field, but 'true' is the default value anyway
+          type: string
+        genre:
+          type: string
+        author:
+          type: Author
+  - Author:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        hobbies?:
+          description: this is an optional field 'hobbies'
+          type: string[]
+
 
 /rest/user/:
   get:
@@ -766,14 +790,14 @@ The RAML 1.0 extension works exactly the same:
 ----
 {
   "$ref": "http://atomicbits.io/raml10/paged-list.json#",
-  "genericTypes": {
-    "T": {
+  "genericTypes": [
+    {
       "$ref": "http://atomicbits.io/raml10/dog.json"
     },
-    "U": {
+    {
       "type": "string"
     }
-  }
+  ]
 }
 ----
 
@@ -798,9 +822,7 @@ The RAML 1.0 extension works exactly the same:
         required: true
       fans:
         type: PagedList
-        genericTypes:
-          T: User
-          U: integer
+        genericTypes: [User, integer]
 ----
 
 

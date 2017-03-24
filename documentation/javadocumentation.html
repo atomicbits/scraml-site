@@ -52,7 +52,7 @@ The transfer objects in the samples code below are mostly expressed in json-sche
 <div class="title">configure the scraml maven-plugin, the dsl dependency and the http client dependency in your maven pom.xml file</div>
 <div class="content">
 <pre class="pygments highlight"><code data-lang="xml">    <span class="tok-nt">&lt;properties&gt;</span>
-        <span class="tok-nt">&lt;scraml.version&gt;</span>0.6.1<span class="tok-nt">&lt;/scraml.version&gt;</span>
+        <span class="tok-nt">&lt;scraml.version&gt;</span>0.7.0<span class="tok-nt">&lt;/scraml.version&gt;</span>
     <span class="tok-nt">&lt;/properties&gt;</span>
 
     <span class="tok-nt">&lt;build&gt;</span>
@@ -584,6 +584,30 @@ POST action that sends a User and receives a Link.</p>
   <span class="tok-p-Indicator">-</span> <span class="tok-l-Scalar-Plain">link</span><span class="tok-p-Indicator">:</span>         <span class="tok-kt">!include</span> <span class="tok-l-Scalar-Plain">schemas/link.json</span>
   <span class="tok-p-Indicator">-</span> <span class="tok-l-Scalar-Plain">method</span><span class="tok-p-Indicator">:</span>       <span class="tok-kt">!include</span> <span class="tok-l-Scalar-Plain">schemas/method.json</span>
   <span class="tok-p-Indicator">-</span> <span class="tok-l-Scalar-Plain">user</span><span class="tok-p-Indicator">:</span>         <span class="tok-kt">!include</span> <span class="tok-l-Scalar-Plain">schemas/user.json</span>
+  <span class="tok-p-Indicator">-</span> <span class="tok-l-Scalar-Plain">Book</span><span class="tok-p-Indicator">:</span>
+      <span class="tok-l-Scalar-Plain">type</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">object</span>
+      <span class="tok-l-Scalar-Plain">properties</span><span class="tok-p-Indicator">:</span>
+        <span class="tok-l-Scalar-Plain">isbn</span><span class="tok-p-Indicator">:</span>
+          <span class="tok-l-Scalar-Plain">type</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">string</span>
+          <span class="tok-l-Scalar-Plain">required</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">true</span>
+        <span class="tok-l-Scalar-Plain">title</span><span class="tok-p-Indicator">:</span>
+          <span class="tok-l-Scalar-Plain">description</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">the title has no required field, but &#39;true&#39; is the default value anyway</span>
+          <span class="tok-l-Scalar-Plain">type</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">string</span>
+        <span class="tok-l-Scalar-Plain">genre</span><span class="tok-p-Indicator">:</span>
+          <span class="tok-l-Scalar-Plain">type</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">string</span>
+        <span class="tok-l-Scalar-Plain">author</span><span class="tok-p-Indicator">:</span>
+          <span class="tok-l-Scalar-Plain">type</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">Author</span>
+  <span class="tok-p-Indicator">-</span> <span class="tok-l-Scalar-Plain">Author</span><span class="tok-p-Indicator">:</span>
+      <span class="tok-l-Scalar-Plain">type</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">object</span>
+      <span class="tok-l-Scalar-Plain">properties</span><span class="tok-p-Indicator">:</span>
+        <span class="tok-l-Scalar-Plain">firstName</span><span class="tok-p-Indicator">:</span>
+          <span class="tok-l-Scalar-Plain">type</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">string</span>
+        <span class="tok-l-Scalar-Plain">lastName</span><span class="tok-p-Indicator">:</span>
+          <span class="tok-l-Scalar-Plain">type</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">string</span>
+        <span class="tok-l-Scalar-Plain">hobbies?</span><span class="tok-p-Indicator">:</span>
+          <span class="tok-l-Scalar-Plain">description</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">this is an optional field &#39;hobbies&#39;</span>
+          <span class="tok-l-Scalar-Plain">type</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">string[]</span>
+
 
 <span class="tok-l-Scalar-Plain">/rest/user/</span><span class="tok-p-Indicator">:</span>
   <span class="tok-l-Scalar-Plain">get</span><span class="tok-p-Indicator">:</span>
@@ -1045,14 +1069,14 @@ The "id" field in a json-schema file is mandatory, but we don&#8217;t require to
 <div class="content">
 <pre class="pygments highlight"><code data-lang="json"><span class="tok-p">{</span>
   <span class="tok-nt">&quot;$ref&quot;</span><span class="tok-p">:</span> <span class="tok-s2">&quot;http://atomicbits.io/raml10/paged-list.json#&quot;</span><span class="tok-p">,</span>
-  <span class="tok-nt">&quot;genericTypes&quot;</span><span class="tok-p">:</span> <span class="tok-p">{</span>
-    <span class="tok-nt">&quot;T&quot;</span><span class="tok-p">:</span> <span class="tok-p">{</span>
+  <span class="tok-nt">&quot;genericTypes&quot;</span><span class="tok-p">:</span> <span class="tok-p">[</span>
+    <span class="tok-p">{</span>
       <span class="tok-nt">&quot;$ref&quot;</span><span class="tok-p">:</span> <span class="tok-s2">&quot;http://atomicbits.io/raml10/dog.json&quot;</span>
     <span class="tok-p">},</span>
-    <span class="tok-nt">&quot;U&quot;</span><span class="tok-p">:</span> <span class="tok-p">{</span>
+    <span class="tok-p">{</span>
       <span class="tok-nt">&quot;type&quot;</span><span class="tok-p">:</span> <span class="tok-s2">&quot;string&quot;</span>
     <span class="tok-p">}</span>
-  <span class="tok-p">}</span>
+  <span class="tok-p">]</span>
 <span class="tok-p">}</span></code></pre>
 </div>
 </div>
@@ -1076,9 +1100,7 @@ The "id" field in a json-schema file is mandatory, but we don&#8217;t require to
         <span class="tok-l-Scalar-Plain">required</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">true</span>
       <span class="tok-l-Scalar-Plain">fans</span><span class="tok-p-Indicator">:</span>
         <span class="tok-l-Scalar-Plain">type</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">PagedList</span>
-        <span class="tok-l-Scalar-Plain">genericTypes</span><span class="tok-p-Indicator">:</span>
-          <span class="tok-l-Scalar-Plain">T</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">User</span>
-          <span class="tok-l-Scalar-Plain">U</span><span class="tok-p-Indicator">:</span> <span class="tok-l-Scalar-Plain">integer</span></code></pre>
+        <span class="tok-l-Scalar-Plain">genericTypes</span><span class="tok-p-Indicator">:</span> <span class="tok-p-Indicator">[</span><span class="tok-nv">User</span><span class="tok-p-Indicator">,</span> <span class="tok-nv">integer</span><span class="tok-p-Indicator">]</span></code></pre>
 </div>
 </div>
 </div>
@@ -1403,7 +1425,7 @@ class hierarchy serialization and the other examples used in this documentation 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-03-21 22:14:55 CET
+Last updated 2017-03-24 12:53:46 CET
 </div>
 </div>
 </body>
